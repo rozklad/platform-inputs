@@ -1,5 +1,5 @@
 {
-	"name": "sanatorium/platform-inputs",
+	"name": "sanatorium/inputs",
 	"type": "platform-extension",
 	"description": "Extended input types",
 	"authors": [

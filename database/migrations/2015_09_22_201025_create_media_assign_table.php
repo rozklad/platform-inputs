@@ -30,4 +30,9 @@ class CreateMediaAssignTable extends Migration {
 	 *
 	 * @return void
 	 */
-	pub
+	public function down()
+	{
+		Schema::drop('media_assign');
+	}
+
+}
