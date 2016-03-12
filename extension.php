@@ -260,14 +260,6 @@ return [
 
 		'admin' => [
 
-			[
-				'slug'  => 'admin-sanatorium-inputs',
-				'name'  => 'Inputs',
-				'class' => 'fa fa-circle-o',
-				'uri'   => 'inputs',
-				'regex' => '/:admin\/inputs/i',
-			],
-
 		],
 
 		'main' => [
