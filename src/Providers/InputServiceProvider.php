@@ -29,15 +29,18 @@ class InputServiceProvider extends ServiceProvider {
 	public function registerTypes()
 	{
 		$types = [
-            'file'       => new Types\FileType,
-            'multifile'  => new Types\MultiFileType,
-            'avatar'     => new Types\AvatarType,
-            'switchery'  => new Types\SwitcheryType,
-            'dropzone'   => new Types\DropzoneType,
-            'true_false' => new Types\TruefalseType,
-            'repeater'   => new Types\RepeaterType,
-            'wysiwyg'    => new Types\WysiwygType,
-            'video'		 => new Types\VideoType,
+            'file'       		=> new Types\FileType,
+            'multifile'  		=> new Types\MultiFileType,
+            'avatar'     		=> new Types\AvatarType,
+            'switchery'  		=> new Types\SwitcheryType,
+            'dropzone'   		=> new Types\DropzoneType,
+            'true_false' 		=> new Types\TruefalseType,
+            'repeater'   		=> new Types\RepeaterType,
+            'wysiwyg'    		=> new Types\WysiwygType,
+            'video'		 		=> new Types\VideoType,
+			'media'				=> new Types\MediaType,
+			'image'		 		=> new Types\ImageType,
+			'multiple_images'	=> new Types\MultipleImagesType,
         ];
 
         $manager = $this->app['platform.attributes.manager'];

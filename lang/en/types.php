@@ -11,6 +11,10 @@ return [
 		'truefalse' => 'True/False',
 		'repeater' => 'Repeater',
 		'wysiwyg' => 'WYSIWYG',
+		'media' => 'Media',
+		'image' => 'Image',
+		'multiple_images' => 'Gallery',
+        'video' => 'Video',
 	],
 
 	'file' => [
