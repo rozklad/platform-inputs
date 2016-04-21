@@ -25,30 +25,5 @@ class MediaType extends BaseType implements TypeInterface
      * {@inheritDoc}
      */
     protected $identifier = 'media';
-
-    /**
-     * Returns all media available in the system
-     */
-    public static function getMedia()
-    {
-        $media = app('platform.media');
-
-        return $media->all();
-    }
-
-    /**
-     * Return media assigned to the current
-     *
-     * @example MediaType::getMediaAssignedToEntity(3, 'Platform\Pages\Models\Page')
-     * @param $object_id Assigned Object ID
-     * @param $object_type Assigned Class of object
-     */
-    public static function getMediaAssignedToEntity(Integer $object_id, String $object_type)
-    {
-        $media = app('platform.media');
-
-        // @todo add where condition(s)
-        return $media->get();
-    }
-
+    
 }

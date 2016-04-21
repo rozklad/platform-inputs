@@ -23,4 +23,12 @@ return [
 		'click_upload' => 'Click to upload',
 	],
 
+	'media' => [
+		'select' => 'Select media',
+	],
+
+	'image' => [
+		'select' => 'Select image',
+	],
+
 ];
