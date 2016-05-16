@@ -8,11 +8,6 @@
 
 <div class="form-group{{ Alert::onForm($attribute->slug, ' has-error') }}" id="form-group-{{ $attribute->slug }}">
 
-    <!-- Hidden input holds all slugs that hold media inputs -->
-    {{--
-    <input type="hidden" name="mediainputs[{{ $attribute->slug }}]" value="{{ $mode }}">
-    --}}
-
     <label for="{{ $attribute->slug }}">
 
         @if ($attribute->description)

@@ -72,6 +72,16 @@ WYSIWYG editor input field.
 
 3. Create templates to display the custom type on frontend and backend in sanatorium/inputs::types/{typeidentifider} theme path. (For example: /themes/admin/default/packages/sanatorium/input/views/types/date.blade.php and /themes/frontend/default/packages/sanatorium/input/views/types/date.blade.php)
 
+### Widgets
+
+#### @display
+
+    {{-- Show single image --}}
+    @display($product, 'cover_image', 'single')
+
+    {{-- Show gallery images --}}
+    @display($product, 'gallery', 'multiple')
+
 ## Changelog
 
 - 0.1.8 - 2016-16-05 - Basic readme file
