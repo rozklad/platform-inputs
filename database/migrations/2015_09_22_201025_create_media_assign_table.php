@@ -21,6 +21,7 @@ class CreateMediaAssignTable extends Migration {
 			$table->integer('entity_id');
 			$table->string('entity_type');
 			$table->integer('media_id');
+			$table->string('slug')->nullable();
 			$table->timestamps();
 		});
 	}

@@ -1,0 +1,219 @@
+/**
+ * Media manager
+ *
+ * Media manager structure
+ * +----------------------+----------------------+
+ * |.media-manager-toolbar|.media-manager-sidebar|
+ * |.media-manager-browser|                      |
+ * +----------------------+----------------------+
+ *
+ * General manager list structure
+ *
+ * - ol.media-manager-list
+ *    - li.media.manager.preview
+ *      - div.media-manager-preview-inner
+ *        - div.media-manager-preview-thumbnail
+ *          - div.media-manager-preview-centered
+ */
+
+$side-padding-media-manager: 8px;
+
+@mixin mediaManagerElementSize() {
+  width: 16.6%;
+  @media(max-width:1600px) {
+    width: 20%;
+  }
+  @media(max-width:1169px) {
+    width: 25%;
+  }
+  @media(max-width:768px) {
+    width: 33.3%;
+  }
+}
+
+/**
+ * Ordered list
+ */
+.media-manager-list {
+  list-style-type: none;
+  padding-left: 0;
+  margin: 0;
+  overflow: auto;
+}
+
+/**
+ * General media preview wrapper
+ */
+.media-manager-preview {
+  overflow: hidden;
+  position: relative;
+  text-align: center;
+  padding: $side-padding-media-manager;
+  float: left;
+  line-height: 0;
+  @include mediaManagerElementSize;
+  &.selected {
+    box-shadow: inset 0 0 0 3px #fff,inset 0 0 0 7px #1e8cbe;
+    &:after {
+      position: absolute;
+      font: normal normal normal 14px/1 FontAwesome;
+      content: "\f00c";
+      color: #fff;
+      display: block;
+      height: 24px;
+      line-height: 24px;
+      width: 24px;
+      z-index: 10;
+      top:2px;
+      right:2px;
+      outline: 0;
+      background-color: #1e8cbe;
+      box-shadow: 0 0 0 1px #fff,0 0 0 2px #1e8cbe;
+    }
+  }
+}
+
+/**
+ * Inside preview
+ */
+.media-manager-preview-inner {
+  cursor: pointer;
+  position: relative;
+  box-shadow: inset 0 0 15px rgba(0,0,0,.1),inset 0 0 0 1px rgba(0,0,0,.05);
+  background: #eee;
+  &:before {
+    content: '';
+    display: block;
+    padding-top: 100%;
+  }
+}
+
+/**
+ * Even deeper
+ */
+.media-manager-preview-thumbnail {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  &:after {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,.1);
+    overflow: hidden;
+  }
+}
+
+.media-manager-preview-centered {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transform: translate(50%, 50%);
+  img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translate(-50%, -50%);
+  }
+  &.landscape {
+    img {
+      max-height: 100%;
+    }
+  }
+  &.portrait {
+    img {
+      max-width: 100%;
+    }
+  }
+}
+
+.media-manager-toolbar {
+  padding: 10px 0;
+  clear: both;
+  overflow: hidden;
+  .media-manager-toolbar-block {
+    @include mediaManagerElementSize;
+    float: left;
+    padding: 0 $side-padding-media-manager;
+    @media(max-width:768px) {
+      padding-bottom: $side-padding-media-manager;
+      width: 100%;
+    }
+  }
+  @media(max-width:768px) {
+    margin-bottom: -2 * $side-padding-media-manager;
+  }
+}
+
+.media-manager-browser {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 300px;
+  bottom: 0;
+  overflow: auto;
+  outline: 0;
+  padding: 0 15px;
+  @media(max-width:768px) {
+    right: 0;
+  }
+}
+
+.media-manager-sidebar {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 300px;
+  padding: 0 15px;
+  z-index: 75;
+  background: #f3f3f3;
+  border-left: 1px solid #dedede;
+  overflow: auto;
+  @media(max-width:768px) {
+    display: none;
+  }
+
+  .media-manager-attachment {
+    position: relative;
+    float: left;
+    max-width: 120px;
+    max-height: 120px;
+    margin-top: 5px;
+    margin-right: 10px;
+    margin-bottom: 5px;
+    img {
+      display: block;
+      max-width: 120px;
+      max-height: 120px;
+      margin: 0 auto;
+    }
+  }
+
+  .media-manager-details {
+    .filename {
+      font-weight: 700;
+    }
+  }
+
+  .tool-sink {
+    padding-top: 20px;
+  }
+}
+
+.media-image-preview {
+  width: 100%;
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+}

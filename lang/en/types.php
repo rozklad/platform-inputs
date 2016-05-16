@@ -3,34 +3,55 @@
 return [
 
     'option' => [
-        'file'            => 'File',
-        'multifile'       => 'Multifile',
-        'avatar'          => 'Avatar',
-        'switchery'       => 'Switchery',
-        'dropzone'        => 'Dropzone',
-        'truefalse'       => 'True/False',
-        'repeater'        => 'Repeater',
-        'wysiwyg'         => 'WYSIWYG',
-        'media'           => 'Media',
-        'image'           => 'Image',
-        'multiple_images' => 'Gallery',
-        'video'           => 'Video',
-    ],
-
-    'file' => [
-        'select'       => 'Select files',
-        'allowed'      => 'Allowed file types',
-        'click_upload' => 'Click to upload',
+        'file'      => 'File',
+        'switchery' => 'Switchery',
+        'dropzone'  => 'Dropzone',
+        'truefalse' => 'True/False',
+        'repeater'  => 'Repeater',
+        'wysiwyg'   => 'WYSIWYG',
+        'media'     => 'Media',
+        'image'     => 'Image',
+        'video'     => 'Video',
+        'gallery'   => 'Gallery',
     ],
 
     'media' => [
-        'select' => 'Select media',
-    ],
+        'select'        => 'Select image',
+        'media_entity'  => 'Upload Files',
+        'media_library' => 'Media Library',
+        'media_details' => 'Media details',
 
-    'image' => [
-        'select'       => 'Select image',
-        'media_entity' => 'Upload Files',
-        'media_library'=> 'Media Library',
+        'upload' => [
+            'select'  => 'Select file',
+            'allowed' => 'Allowed file types',
+        ],
+
+        'sort' => [
+            'created_at' => 'From oldest',
+            'size'       => 'Size',
+            'name'       => 'Name',
+        ],
+
+        'filter' => [
+            'all'       => 'All uploaded items',
+            'images'    => 'Images',
+            'audio'     => 'Audio',
+            'video'     => 'Video',
+            'documents' => 'Documents',
+        ],
+
+        'fields' => [
+            'name'   => 'Name',
+            'status' => 'Status',
+        ],
+
+        'actions' => [
+            'delete'            => 'Delete',
+            'share'             => 'Share',
+            'download'          => 'Download',
+            'email'             => 'Email',
+            'copy_to_clipboard' => 'Copy to clipboard',
+        ],
     ],
 
 ];

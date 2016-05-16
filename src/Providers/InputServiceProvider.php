@@ -14,8 +14,8 @@ class InputServiceProvider extends ServiceProvider {
 		// Register all the project-user types
         $this->registerTypes();
 
-        // Register the Blade @media_select widget
-		$this->registerBladeMediaSelectWidget();
+		// Register the Blade @display widget
+		$this->registerDisplayWidget();
 	}
 
 	/**
@@ -30,8 +30,6 @@ class InputServiceProvider extends ServiceProvider {
 	{
 		$types = [
             'file'       		=> new Types\FileType,
-            'multifile'  		=> new Types\MultiFileType,
-            'avatar'     		=> new Types\AvatarType,
             'switchery'  		=> new Types\SwitcheryType,
             'dropzone'   		=> new Types\DropzoneType,
             'true_false' 		=> new Types\TruefalseType,
@@ -40,7 +38,7 @@ class InputServiceProvider extends ServiceProvider {
             'video'		 		=> new Types\VideoType,
 			'media'				=> new Types\MediaType,
 			'image'		 		=> new Types\ImageType,
-			'multiple_images'	=> new Types\MultipleImagesType,
+			'gallery'		 	=> new Types\GalleryType,
         ];
 
         $manager = $this->app['platform.attributes.manager'];
@@ -51,14 +49,14 @@ class InputServiceProvider extends ServiceProvider {
 	}
 
 	/**
-     * Register the Blade @media_select widget.
+     * Register the Blade @display widget.
      *
      * @return void
      */
-	public function registerBladeMediaSelectWidget()
+	public function registerDisplayWidget()
 	{
-        $this->app['blade.compiler']->directive('media_select', function ($value) {
-            return "<?php echo Widget::make('sanatorium/inputs::media.select', array$value); ?>";
+        $this->app['blade.compiler']->directive('display', function ($value) {
+            return "<?php echo Widget::make('sanatorium/inputs::display.show', array$value); ?>";
         });
 	}
 

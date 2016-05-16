@@ -17,6 +17,8 @@
 
 namespace Sanatorium\Inputs\Types;
 
+use Cartalyst\Attributes\EntityInterface;
+use Platform\Attributes\Models\Attribute;
 
 class ImageType extends MediaType
 {
@@ -24,4 +26,15 @@ class ImageType extends MediaType
      * {@inheritDoc}
      */
     protected $identifier = 'image';
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getEntityFormHtml(Attribute $attribute, EntityInterface $entity)
+    {
+        $mode = 'single';
+        $filter = 'images';
+        $types = ['image/png', 'image/jpg', 'image/gif'];
+        return view("sanatorium/inputs::types/media", compact('attribute', 'entity', 'mode', 'filter', 'types'));
+    }
 }
