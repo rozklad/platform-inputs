@@ -67,7 +67,7 @@ return [
     |
     */
 
-    'version' => '0.1.9',
+    'version' => '0.2.0',
 
     /*
     |--------------------------------------------------------------------------
@@ -153,14 +153,6 @@ return [
         ], function ()
         {
 
-            Route::post('dropzone', ['as' => 'sanatorium.inputs.dropzone.upload', 'uses' => 'DropzoneController@upload']);
-            Route::post('dropzone/single', ['as' => 'sanatorium.inputs.dropzone.upload.single', 'uses' => 'DropzoneController@single']);
-            Route::post('dropzone/avatar', ['as' => 'sanatorium.inputs.dropzone.upload.avatar', 'uses' => 'DropzoneController@avatar']);
-            Route::post('dropzone/cover', ['as' => 'sanatorium.inputs.dropzone.cover', 'uses' => 'DropzoneController@cover']);
-            Route::delete('dropzone/delete', ['as' => 'sanatorium.inputs.dropzone.delete', 'uses' => 'DropzoneController@delete']);
-
-            Route::get('media/options/{only_images}', ['as' => 'sanatorium.inputs.media.options', 'uses' => 'DropzoneController@options']);
-
             Route::group([
                 'prefix' => 'media',
             ], function ()
@@ -168,6 +160,23 @@ return [
 
                 Route::get('/', ['as' => 'sanatorium.inputs.media.all', 'uses' => 'MediaController@getMedia']);
                 Route::get('{id}/{type}', ['as' => 'sanatorium.inputs.media.entity', 'uses' => 'MediaController@getMediaAssignedToEntity']);
+
+            });
+
+        });
+
+        Route::group([
+           'prefix' => admin_uri(),
+            'namespace' => 'Sanatorium\Inputs\Controllers\Admin',
+        ], function()
+        {
+
+            Route::group([
+                'prefix' => 'media',
+            ], function ()
+            {
+
+                Route::delete('{id}', ['as' => 'sanatorium.inputs.media.delete', 'uses' => 'MediaController@delete']);
 
             });
 

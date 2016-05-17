@@ -15,15 +15,25 @@ return [
         'gallery'   => 'Gallery',
     ],
 
+    'image' => [
+        'select' => 'Select image',
+    ],
+
+    'video' => [
+        'select' => 'Select video',
+    ],
+
     'media' => [
-        'select'        => 'Select image',
         'media_entity'  => 'Upload Files',
         'media_library' => 'Media Library',
         'media_details' => 'Media details',
+        'search'        => 'Search',
 
         'upload' => [
-            'select'  => 'Select file',
+            'select'  => 'Select Files',
             'allowed' => 'Allowed file types',
+            'or'      => 'or',
+            'drop'    => 'Drop files anywhere to upload',
         ],
 
         'sort' => [

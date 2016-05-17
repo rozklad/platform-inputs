@@ -29,19 +29,22 @@
                     <?php $value = $value[0]; ?>
                 @endif
 
-                <input type="hidden" name="{{ $attribute->slug }}[]" value="{{ $value }}">
+                <input type="hidden" name="{{ $attribute->slug }}[]" value="{{ $value }}" class="media-manager-input">
             @endforeach
         @endif
-        <input type="hidden" name="{{ $attribute->slug }}[]">
     @else
-        <input type="hidden" name="{{ $attribute->slug }}" value="{{ $entity->{$attribute->slug} }}">
+        <input type="hidden" name="{{ $attribute->slug }}" value="{{ $entity->{$attribute->slug} }}" class="media-manager-input">
     @endif
 
     <br>
 
     <!-- Button trigger modal -->
     <button type="button" class="btn btn-default" data-toggle="modal" data-target="#media-manager-{{ $attribute->slug }}">
-        {{ trans('sanatorium/inputs::types.media.select') }}
+        @if ( isset($label) )
+            {{ $label }}
+        @else
+            {{ trans('sanatorium/inputs::types.media.upload.select') }}
+        @endif
     </button>
 
     <span class="help-block"></span>
@@ -50,13 +53,22 @@
 
 
 <!-- Modal -->
-<div class="modal modal-xlg fade media-manager" id="media-manager-{{ $attribute->slug }}" tabindex="-1" role="dialog" aria-labelledby="media-manager-{{ $attribute->slug }}-label" data-mode="{{ $mode }}" data-input-name="{{ ( $mode == 'multiple' ? $attribute->slug . '[]' : $attribute->slug ) }}" data-form-group="#form-group-{{ $attribute->slug }}">
+<div class="modal modal-xlg fade media-manager" id="media-manager-{{ $attribute->slug }}" tabindex="-1" role="dialog" aria-labelledby="media-manager-{{ $attribute->slug }}-label"
+     data-mode="{{ $mode }}" data-input-name="{{ ( $mode == 'multiple' ? $attribute->slug . '[]' : $attribute->slug ) }}"
+     data-preview-template="media-preview-template-{{ $attribute->slug }}"
+     data-form-group="#form-group-{{ $attribute->slug }}"
+     data-search="#media-manager-{{ $attribute->slug }}-search"
+     data-dropzone="#media-manager-{{ $attribute->slug }}-current">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header bg-modal-secondary">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="media-manager-{{ $attribute->slug }}-label">
-                    {{ trans('sanatorium/inputs::types.media.select') }}
+                    @if ( isset($label) )
+                        {{ $label }}
+                    @else
+                        {{ trans('sanatorium/inputs::types.media.upload.select') }}
+                    @endif
                 </h4>
                 <ul class="nav nav-tabs original" role="tablist">
                     <li role="presentation" class="active">
@@ -72,52 +84,79 @@
                 </ul>
             </div>
             <div class="modal-body">
-                <div class="media-manager-browser scrollable-y">
-                    <div class="media-manager-toolbar">
-                        <div class="media-manager-toolbar-block">
-                            <select class="form-control" data-media-sort>
-                                <option value="created_at">{{ trans('sanatorium/inputs::types.media.sort.created_at') }}</option>
-                                <option value="name">{{ trans('sanatorium/inputs::types.media.sort.name') }}</option>
-                                <option value="size">{{ trans('sanatorium/inputs::types.media.sort.size') }}</option>
-                            </select>
-                        </div>
-                        <div class="media-manager-toolbar-block">
-                            <select class="form-control" data-media-filter>
-                                <option value="images">{{ trans('sanatorium/inputs::types.media.filter.images') }}</option>
-                                <option value="documents">{{ trans('sanatorium/inputs::types.media.filter.documents') }}</option>
-                                <option value="audio">{{ trans('sanatorium/inputs::types.media.filter.audio') }}</option>
-                                <option value="video">{{ trans('sanatorium/inputs::types.media.filter.video') }}</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="tab-content">
-                        <div role="tabpanel" class="tab-pane active" id="media-manager-{{ $attribute->slug }}-current">
 
-                            <!-- tady by měl být původně uploader -->
-                            <i class="fa fa-upload fa-5x"></i>
-                            <h4>{{ trans('sanatorium/inputs::types.media.upload.select') }}</h4>
-                            <p class="lead">{{ trans('sanatorium/inputs::types.media.upload.allowed') }}</p>
+                <div class="tab-content">
+
+                    {{-- Upload --}}
+                    <div role="tabpanel" class="tab-pane tab-pane-middle media-manager-dropzone active" id="media-manager-{{ $attribute->slug }}-current">
+
+                        <div class="tab-pane-middle-inner">
+
+                            <p class="lead">{{ trans('sanatorium/inputs::types.media.upload.drop') }}</p>
+
+                            <p class="upload-or">{{ trans('sanatorium/inputs::types.media.upload.or') }}</p>
+
+                            <button type="button" class="btn btn-default btn-upload">
+                                {{ trans('sanatorium/inputs::types.media.upload.select') }}
+                            </button>
+
                             <p class="small">
+                                {{ trans('sanatorium/inputs::types.media.upload.allowed') }}:
                                 <i>
                                     {{ implode(', ', config('cartalyst.filesystem.allowed_mimes')) }}
                                 </i>
                             </p>
-
                         </div>
-                        <div role="tabpanel" class="tab-pane" id="media-manager-{{ $attribute->slug }}-library">
+
+                    </div>
+
+                    {{-- Library --}}
+                    <div role="tabpanel" class="tab-pane" id="media-manager-{{ $attribute->slug }}-library">
+
+                        <div class="media-manager-browser scrollable-y">
+
+                            {{-- Toolbar --}}
+                            <div class="media-manager-toolbar">
+                                <div class="media-manager-toolbar-block">
+                                    <select class="form-control" data-media-sort>
+                                        <option value="created_at">{{ trans('sanatorium/inputs::types.media.sort.created_at') }}</option>
+                                        <option value="name">{{ trans('sanatorium/inputs::types.media.sort.name') }}</option>
+                                        <option value="size">{{ trans('sanatorium/inputs::types.media.sort.size') }}</option>
+                                    </select>
+                                </div>
+                                <div class="media-manager-toolbar-block">
+                                    <select class="form-control" data-media-filter>
+                                        <option value="images">{{ trans('sanatorium/inputs::types.media.filter.images') }}</option>
+                                        <option value="documents">{{ trans('sanatorium/inputs::types.media.filter.documents') }}</option>
+                                        <option value="audio">{{ trans('sanatorium/inputs::types.media.filter.audio') }}</option>
+                                        <option value="video">{{ trans('sanatorium/inputs::types.media.filter.video') }}</option>
+                                    </select>
+                                </div>
+                                <div class="media-manager-toolbar-block pull-right">
+                                    <input type="text" class="form-control" id="media-manager-{{ $attribute->slug }}-search" placeholder="{{ trans('sanatorium/inputs::types.media.search') }}">
+                                </div>
+                            </div>
+
+                            {{-- Media list --}}
                             <div data-media-load="{{ route('sanatorium.inputs.media.all') }}" data-entity-id="{{ $entity->id }}" data-entity-type="{{ get_class($entity) }}">
 
-                                <!-- tady by měl být původně uploader -->
-
                             </div>
+
                         </div>
+
+                        <div class="media-manager-sidebar hidden-xs bg-modal-secondary">
+
+                        </div>
+
                     </div>
                 </div>
-                <div class="media-manager-sidebar hidden-xs bg-modal-secondary">
 
-                </div>
+
             </div>
             <div class="modal-footer">
+                <div class="modal-status pull-left">
+
+                </div>
                 <button type="button" class="btn btn-default" data-dismiss="modal">
                     {{ trans('action.close') }}
                 </button>
@@ -129,7 +168,7 @@
     </div>
 </div>
 
-<script type="text/x-template-lodash" id="media-preview-template">
+<script type="text/x-template-lodash" id="media-preview-template-{{ $attribute->slug }}">
 
     <% if ( media.length > 0 ) { %>
 
@@ -235,19 +274,19 @@
 
     <div class="tool-sink">
         <div class="btn-group btn-group-justified" role="group">
-            <a href="<%= view_uri %>" class="btn btn-default">
+            <a href="<%= view_uri %>" class="btn btn-default" target="_blank">
                 <i class="fa fa-share-alt"></i>
             </a>
-            <a href="<%= download_uri %>" class="btn btn-default">
+            <a href="<%= download_uri %>" class="btn btn-default" target="_blank">
                 <i class="fa fa-download"></i>
             </a>
-            <a href="<%= email_uri %>" class="btn btn-default">
+            <a href="<%= email_uri %>" class="btn btn-default" target="_blank">
                 <i class="fa fa-envelope"></i>
             </a>
-            <a href="<%= edit_uri %>" class="btn btn-default">
+            <a href="<%= edit_uri %>" class="btn btn-default" target="_blank">
                 <i class="fa fa-pencil"></i>
             </a>
-            <a href="<%= delete_uri %>" class="btn btn-default">
+            <a href="<%= delete_uri %>" class="btn btn-default" data-delete>
                 <i class="fa fa-trash"></i>
             </a>
         </div>

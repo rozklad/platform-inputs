@@ -24,17 +24,24 @@ class Display {
     public function getMedia($entity, $slug, $mode)
     {
         if ( !$entity->{$slug} )
-            return null;
+            return [];
 
         switch( $mode ) {
 
             case 'single':
+
+                    if ( !is_numeric($entity->{$slug}) )
+                        return [];
+
                     return [$this->media->find($entity->{$slug})];
                 break;
 
             case 'multiple':
-                    $return = $this->media->whereIn('id', array_values($entity->{$slug}))->get();
-                    return $return;
+
+                if ( !is_array($entity->{$slug}) )
+                        return [];
+
+                    return $this->media->whereIn('id', $entity->{$slug})->get();
                 break;
 
         }

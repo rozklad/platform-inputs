@@ -35,6 +35,7 @@ class ImageType extends MediaType
         $mode = 'single';
         $filter = 'images';
         $types = ['image/png', 'image/jpg', 'image/gif'];
-        return view("sanatorium/inputs::types/media", compact('attribute', 'entity', 'mode', 'filter', 'types'));
+        $label = trans('sanatorium/inputs::types.image.select');
+        return view("sanatorium/inputs::types/media", compact('attribute', 'entity', 'mode', 'filter', 'types', 'label'));
     }
 }

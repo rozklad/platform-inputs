@@ -57,7 +57,7 @@ class MediaController extends Controller {
                 $media->thumbnail_uri = url($media->thumbnail);
                 $media->view_uri = route('media.view', $media->path);
                 $media->edit_uri = route('admin.media.edit', $media->id);
-                $media->delete_uri = route('admin.media.delete', $media->id);
+                $media->delete_uri = route('sanatorium.inputs.media.delete', $media->id);
                 $media->email_uri = route('admin.media.email', $media->id);
                 $media->download_uri = route('media.download', $media->path);
                 $media->tags = $media->tags;
@@ -149,6 +149,33 @@ class MediaController extends Controller {
             ->where('media_assign.entity_type', $entity_type)
             ->where('media_assign.entity_id', $entity_id)
             ->get();
+    }
+
+
+    /**
+     * Removes the specified media.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\RedirectResponse or array if is ajax
+     */
+    public function delete($id)
+    {
+        $type = $this->media->delete($id) ? 'success' : 'error';
+
+        $this->alerts->{$type}(
+            trans("platform/media::message.{$type}.delete")
+        );
+
+        if ( request()->ajax() )
+        {
+
+            return [
+                'type' => $type
+            ];
+
+        }
+
+        return redirect()->route('admin.media.all');
     }
 
 }

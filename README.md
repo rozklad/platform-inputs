@@ -76,6 +76,8 @@ WYSIWYG editor input field.
 
 #### @display
 
+Widget to show media input types
+
     {{-- Show single image --}}
     @display($product, 'cover_image', 'single')
 
