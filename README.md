@@ -6,6 +6,10 @@ Extended input types
 
 ### Available input types
 
+### Category
+
+Pick category from tree.
+
 #### File
 
 Pick single file from media library.

@@ -25,22 +25,25 @@ class MediaController extends Controller {
     }
 
     /**
-     * Static version of getMedia
+     * Static approach
      * @return mixed
      */
-    public function getMediaAll()
+    public function getMediaAll($orderBy = 'created_at', $orderWay = 'desc')
     {
         $media = app('platform.media');
 
-        return $media->all();
+        return $media->orderBy($orderBy, $orderWay)->get();
     }
 
     /**
      * Returns all media available in the system
      */
-    public function getMedia()
+    public function getMedia($orderBy = 'created_at', $orderWay = 'desc')
     {
-        return ( $this->fetch ? $this->fetch( $this->media->all() ) : $this->media->all() );
+        return ( $this->fetch
+            ? $this->fetch( $this->media->orderBy($orderBy, $orderWay)->get() )
+            : $this->media->orderBy($orderBy, $orderWay)->get()
+        );
     }
 
     public function fetch($media)
@@ -176,6 +179,20 @@ class MediaController extends Controller {
         }
 
         return redirect()->route('admin.media.all');
+    }
+
+    public function upload()
+    {
+        $medium = null;
+
+        if( request()->hasFile('file') )
+        {
+
+            $medium = app('platform.media')->upload(request()->file('file'), []);
+
+        }
+
+        return $medium;
     }
 
 }

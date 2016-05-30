@@ -31,6 +31,12 @@ $side-padding-media-manager: 8px;
   }
 }
 
+.media-manager {
+  .modal-body {
+    overflow-y: auto;
+  }
+}
+
 /**
  * Ordered list
  */
@@ -39,11 +45,21 @@ $side-padding-media-manager: 8px;
   padding-left: 0;
   margin: 0;
   overflow: auto;
+
+  -webkit-user-select: none;  /* Chrome all / Safari all */
+  -moz-user-select: none;     /* Firefox all */
+  -ms-user-select: none;      /* IE 10+ */
+  user-select: none;          /* Likely future */
 }
 
 /**
  * General media preview wrapper
  */
+$selected-border-bg-color: #1e8cbe;
+$selected-border-color: #fff;
+$manipulated-border-bg-color: #ccc;
+$manipulated-border-color: #111;
+
 .media-manager-preview {
   overflow: hidden;
   position: relative;
@@ -52,13 +68,11 @@ $side-padding-media-manager: 8px;
   float: left;
   line-height: 0;
   @include mediaManagerElementSize;
-  &.selected {
-    box-shadow: inset 0 0 0 3px #fff,inset 0 0 0 7px #1e8cbe;
+  &.manipulated, &.selected {
     &:after {
       position: absolute;
       font: normal normal normal 14px/1 FontAwesome;
       content: "\f00c";
-      color: #fff;
       display: block;
       height: 24px;
       line-height: 24px;
@@ -67,8 +81,22 @@ $side-padding-media-manager: 8px;
       top:2px;
       right:2px;
       outline: 0;
-      background-color: #1e8cbe;
-      box-shadow: 0 0 0 1px #fff,0 0 0 2px #1e8cbe;
+    }
+  }
+  &.manipulated {
+    box-shadow: inset 0 0 0 3px #fff,inset 0 0 0 7px $manipulated-border-bg-color;
+    &:after {
+      background-color: $manipulated-border-bg-color;
+      box-shadow: 0 0 0 1px #fff,0 0 0 2px $manipulated-border-bg-color;
+      color: $manipulated-border-color;
+    }
+  }
+  &.selected {
+    box-shadow: inset 0 0 0 3px #fff,inset 0 0 0 7px $selected-border-bg-color;
+    &:after {
+      background-color: $selected-border-bg-color;
+      box-shadow: 0 0 0 1px #fff,0 0 0 2px $selected-border-bg-color;
+      color: $selected-border-color;
     }
   }
 }
@@ -118,11 +146,14 @@ $side-padding-media-manager: 8px;
   width: 100%;
   height: 100%;
   transform: translate(50%, 50%);
-  img {
+  img, i, canvas {
     position: absolute;
     top: 0;
     left: 0;
     transform: translate(-50%, -50%);
+  }
+  i {
+    font-size: 72px;
   }
   &.landscape {
     img {
@@ -186,8 +217,8 @@ $side-padding-media-manager: 8px;
   .media-manager-attachment {
     position: relative;
     float: left;
-    max-width: 120px;
-    max-height: 120px;
+    width: 120px;
+    height: 120px;
     margin-top: 5px;
     margin-right: 10px;
     margin-bottom: 5px;
@@ -197,9 +228,17 @@ $side-padding-media-manager: 8px;
       max-height: 120px;
       margin: 0 auto;
     }
+    i {
+      font-size: 72px;
+      width: 120px;
+      height: 120px;
+      text-align: center;
+      line-height: 120px;
+    }
   }
 
   .media-manager-details {
+    height: 140px;
     .filename {
       font-weight: 700;
     }
@@ -274,21 +313,54 @@ $tab-upload-panel-height: 180px;
   }
 }
 
-.media-manager-dropzone {
+$upload-color: #61efec;
+$upload-color-secondary: rgba($upload-color,0.2);
 
+/**
+ * dropzone
+ */
+[data-media-dropzone] {
   &.over {
-
     &:after {
       content: "";
+      pointer-events: none;
       display: block;
       position: absolute;
       width: 100%;
       height: 100%;
       z-index: 5;
-      background-color: #A4F8F6;
-      color: #5AF9F6;
+      border: 5px solid $upload-color;
+      background-color: $upload-color-secondary;
     }
-
   }
   //
+}
+
+.sanatorium-inputs-widget-display {
+  text-align: center;
+  i {
+    font-size: 72px;
+  }
+}
+
+.media-manager-file__bar {
+  position: absolute;
+  bottom: 50%;
+  margin-bottom: -10px;
+  left: 20px;
+  right: 20px;
+  height: 20px;
+  background-color: $upload-color-secondary;
+  border-radius: 4px;
+  box-shadow: 0 0 2px rgba(0,0,0,0.4);
+  border: 1px solid $upload-color;
+  .media-manager-progress {
+    .media-manager-progress__bar {
+      background-color: $upload-color;
+      height: 20px;
+      display: block;
+      width: 0;
+      transition: width 0.6s;
+    }
+  }
 }

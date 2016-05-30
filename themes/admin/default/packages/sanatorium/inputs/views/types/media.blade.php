@@ -52,13 +52,14 @@
 </div>
 
 
-<!-- Modal -->
+<!-- Modal: data attributes contain specific variables for the request -->
 <div class="modal modal-xlg fade media-manager" id="media-manager-{{ $attribute->slug }}" tabindex="-1" role="dialog" aria-labelledby="media-manager-{{ $attribute->slug }}-label"
      data-mode="{{ $mode }}" data-input-name="{{ ( $mode == 'multiple' ? $attribute->slug . '[]' : $attribute->slug ) }}"
      data-preview-template="media-preview-template-{{ $attribute->slug }}"
      data-form-group="#form-group-{{ $attribute->slug }}"
      data-search="#media-manager-{{ $attribute->slug }}-search"
-     data-dropzone="#media-manager-{{ $attribute->slug }}-current">
+     data-token="{{ csrf_token() }}"
+     data-upload-url="{{ route('sanatorium.inputs.media.upload') }}">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header bg-modal-secondary">
@@ -72,12 +73,20 @@
                 </h4>
                 <ul class="nav nav-tabs original" role="tablist">
                     <li role="presentation" class="active">
-                        <a href="#media-manager-{{ $attribute->slug }}-current" aria-controls="media-manager-{{ $attribute->slug }}-current" role="tab" data-toggle="tab">
+                        <a href="#media-manager-{{ $attribute->slug }}-current"
+                            aria-controls="media-manager-{{ $attribute->slug }}-current"
+                            role="tab"
+                            data-toggle="tab"
+                            data-tab-control-current>
                             {{ trans('sanatorium/inputs::types.media.media_entity') }}
                         </a>
                     </li>
                     <li role="presentation">
-                        <a href="#media-manager-{{ $attribute->slug }}-library" aria-controls="media-manager-{{ $attribute->slug }}-library" role="tab" data-toggle="tab">
+                        <a href="#media-manager-{{ $attribute->slug }}-library"
+                            aria-controls="media-manager-{{ $attribute->slug }}-library"
+                            role="tab"
+                            data-toggle="tab"
+                            data-tab-control-library>
                             {{ trans('sanatorium/inputs::types.media.media_library') }}
                         </a>
                     </li>
@@ -88,7 +97,10 @@
                 <div class="tab-content">
 
                     {{-- Upload --}}
-                    <div role="tabpanel" class="tab-pane tab-pane-middle media-manager-dropzone active" id="media-manager-{{ $attribute->slug }}-current">
+                    <div role="tabpanel"
+                         class="tab-pane tab-pane-middle media-manager-dropzone active"
+                         id="media-manager-{{ $attribute->slug }}-current"
+                         data-media-dropzone>
 
                         <div class="tab-pane-middle-inner">
 
@@ -111,7 +123,10 @@
                     </div>
 
                     {{-- Library --}}
-                    <div role="tabpanel" class="tab-pane" id="media-manager-{{ $attribute->slug }}-library">
+                    <div role="tabpanel"
+                         class="tab-pane"
+                         id="media-manager-{{ $attribute->slug }}-library"
+                         data-media-dropzone>
 
                         <div class="media-manager-browser scrollable-y">
 
@@ -119,13 +134,17 @@
                             <div class="media-manager-toolbar">
                                 <div class="media-manager-toolbar-block">
                                     <select class="form-control" data-media-sort>
-                                        <option value="created_at">{{ trans('sanatorium/inputs::types.media.sort.created_at') }}</option>
-                                        <option value="name">{{ trans('sanatorium/inputs::types.media.sort.name') }}</option>
-                                        <option value="size">{{ trans('sanatorium/inputs::types.media.sort.size') }}</option>
+                                        <option value="created_at:desc">{{ trans('sanatorium/inputs::types.media.sort.newest') }}</option>
+                                        <option value="created_at">{{ trans('sanatorium/inputs::types.media.sort.oldest') }}</option>
+                                        <option value="name">{{ trans('sanatorium/inputs::types.media.sort.alphabetically_asc') }}</option>
+                                        <option value="name:desc">{{ trans('sanatorium/inputs::types.media.sort.alphabetically_desc') }}</option>
+                                        <option value="size">{{ trans('sanatorium/inputs::types.media.sort.smallest') }}</option>
+                                        <option value="size:desc">{{ trans('sanatorium/inputs::types.media.sort.largest') }}</option>
                                     </select>
                                 </div>
                                 <div class="media-manager-toolbar-block">
                                     <select class="form-control" data-media-filter>
+                                        <option value="all">{{ trans('sanatorium/inputs::types.media.filter.all') }}</option>
                                         <option value="images">{{ trans('sanatorium/inputs::types.media.filter.images') }}</option>
                                         <option value="documents">{{ trans('sanatorium/inputs::types.media.filter.documents') }}</option>
                                         <option value="audio">{{ trans('sanatorium/inputs::types.media.filter.audio') }}</option>
@@ -167,6 +186,50 @@
         </div>
     </div>
 </div>
+
+<script id="file-ejs" type="text/ejs">
+    <li class="media-manager-preview" id="file-<%=FileAPI.uid(file)%>">
+        <div class="media-manager-preview-inner">
+            <div class="media-manager-preview-thumbnail">
+                <div class="media-manager-preview-centered">
+
+                    <img src="<%=icon[file.type.split('/')[0]]||icon.def%>" width="300" height="300" style="margin: 2px 0 0 3px" class="media-manager-preview-uploader">
+
+                </div>
+               <div class="media-manager-file__bar">
+                    <div class="media-manager-progress">
+                        <div class="media-manager-progress__bar"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!--
+    <div class="panel panel-default" id="file-<%=FileAPI.uid(file)%>" class="js-file b-file b-file_<%=file.type.split('/')[0]%>">
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-xs-3 file__left">
+                    <i class="<%=icon[file.type.split('/')[0]]||icon.def%> media-manager-preview-uploader"></i>
+                </div>
+                <div class="col-xs-8">
+                        <a class="file__name"><%=file.name%></a>
+                        <div class="file__info">size: <%=(file.size/FileAPI.KB).toFixed(2)%> KB</div>
+                        <div class="file__bar" style="display: none">
+                            <div class="progress"><div class="progress__bar"></div></div>
+                        </div>
+                </div>
+                <div class="col-xs-1 text-right">
+                    <i class="file__abort" title="abort">&times;</i>
+                </div>
+            </div>
+        </div>
+    </div>
+    -->
+</script>
+
+<div class="media-manager-uploading-area"></div>
 
 <script type="text/x-template-lodash" id="media-preview-template-{{ $attribute->slug }}">
 
@@ -309,4 +372,5 @@
 
 
 </script>
+
 

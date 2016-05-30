@@ -35,6 +35,7 @@
     currentData   : null,
     sort          : 'created_at',
     filters       : {
+      all      : [],
       images   : ['image/jpeg', 'image/png', 'image/gif'],
       documents: ['text/plain', 'application/pdf'],
       audio    : ['audio/ogg'],
@@ -50,12 +51,26 @@
     typingInterval: 300,
     langs         : {
       messages: {
-        deleting      : 'Deleting media file',
-        deleted       : 'Media was succesfully deleted',
-        deleted_errors: 'There was an error deleting media file',
+        deleting      : '<i class="fa fa-refresh"></i> Deleting media file',
+        deleted       : '<i class="fa fa-times"></i> Media was succesfully deleted',
+        deleted_errors: '<i class="fa fa-times"></i> There was an error deleting media file',
+        uploading     : '<i class="fa fa-refresh"></i> Uploading media file',
+        uploaded      : '<i class="fa fa-check"></i> Media file was succesfully uploaded',
+        upload_error  : '<i class="fa fa-times"></i> There was an error uploading media file'
       }
 
     },
+    urls          : {
+      upload: null
+    },
+    icon: {
+      def:   'fa fa-file-o',
+      image: 'fa fa-file-pdf-o',
+      audio: 'fa fa-file-movie-o',
+      video: 'fa fa-file-movie-o',
+    },
+    token         : null,
+    thumbnailSize : 300,
 
     init: function ($manager) {
 
@@ -71,18 +86,25 @@
 
     cacheSelectors: function () {
 
-      this.$loadable = this.$manager.find('[data-media-load]');
-      this.$sorters = this.$manager.find('[data-media-sort]');
-      this.$filters = this.$manager.find('[data-media-filter]');
-      this.$sidebar = this.$manager.find('.media-manager-sidebar');
-      this.template = this.$manager.data('preview-template');
-      this.$search = $(this.$manager.data('search'));
-      this.$dropzone = $(this.$manager.data('dropzone'));
-      this.mode = ( typeof this.$manager.data('mode') !== 'undefined' ? this.$manager.data('mode') : this.mode );
-      this.input_name = this.$manager.data('input-name');
-      this.form_group = this.$manager.data('form-group');
-      this.$input = $('[name="' + this.$manager.data('input-name') + '"]');
-      this.$statusbar = this.$manager.find('.modal-status');
+      this.$loadable   = this.$manager.find('[data-media-load]');
+      this.$sorters    = this.$manager.find('[data-media-sort]');
+      this.$filters    = this.$manager.find('[data-media-filter]');
+      this.$dropzone   = this.$manager.find('[data-media-dropzone]');
+      this.$sidebar    = this.$manager.find('.media-manager-sidebar');
+      this.template    = this.$manager.data('preview-template');
+      this.$search     = $(this.$manager.data('search'));
+      this.mode        = ( typeof this.$manager.data('mode') !== 'undefined' ? this.$manager.data('mode') : this.mode );
+      this.input_name  = this.$manager.data('input-name');
+      this.form_group  = this.$manager.data('form-group');
+      this.$input      = $('[name="' + this.$manager.data('input-name') + '"]');
+      this.$statusbar  = this.$manager.find('.modal-status');
+      this.urls.upload = this.$manager.data('upload-url');
+      this.token       = this.$manager.data('token');
+      this.controls    = {
+        $upload: this.$manager.find('[data-tab-control-upload]'),
+        $library: this.$manager.find('[data-tab-control-library]')
+      };
+
     },
 
     addGlobalListeners: function () {
@@ -110,27 +132,121 @@
     /**
      * Activate Drag and drop Drop function
      */
-    activateDnd: function() {
+    activateDnd: function () {
 
       var self = this;
 
-      FileAPI.event.dnd(this.$dropzone.get(0), function(over) {
-        console.log(over);
-        if ( over ) {
-          self.$dropzone.addClass('over');
-        } else {
-          self.$dropzone.removeClass('over');
+      this.$dropzone.each(function(){
+
+        var $dropzone = $(this);
+
+        FileAPI.event.dnd($dropzone.get(0), function (over) {
+
+          if (over) {
+            $dropzone.addClass('over');
+          } else {
+            $dropzone.removeClass('over');
+          }
+
+        }, function (files) {
+
+          $('a[href="'+ self.controls.$library.attr('href') +'"]').tab('show');
+
+          if (files.length) {
+
+            self.uploadFiles(files);
+
+          }
+
+        });
+
+      });
+
+    },
+
+    /**
+     * Triggered from activateDnd above
+     * @param files
+     */
+    uploadFiles: function (files) {
+
+      var self = this;
+
+      for (var key in files) {
+
+        var upload = files[key];
+
+        self.showUploading(upload);
+
+        self.uploadFile(upload);
+
+      }
+
+    },
+
+    getIdByFile: function(file) {
+
+      return 'file-'+FileAPI.uid(file);
+
+    },
+
+    showUploading: function(file) {
+
+      var self = this;
+
+      var id = this.getIdByFile(file);
+
+      // Add loading thumbs in all manager list
+      // later this might need to be revised (as the shown data might be different)
+      this.$manager.find('.media-manager-list').prepend(
+          tmpl($('#file-ejs').html(), { file: file, icon: self.icon })
+      );
+
+      if( /^image/.test(file.type) ){
+        FileAPI.Image(file).preview(self.thumbnailSize).rotate('auto').get(function (err, img){
+          
+          $('#' + id).find('.media-manager-preview-uploader').replaceWith(img);
+          
+        });
+      }
+
+    },
+
+    uploadFile: function (upload) {
+
+      var self  = this;
+
+      self.status(self.langs.messages.uploading);
+
+      var xhr = FileAPI.upload({
+        url         : self.urls.upload,
+        files       : {file: upload},
+        data        : {_token: self.token},
+        // On upload complete
+        complete    : function (err, xhr) {
+          if (!err) {
+            var result = xhr.responseText;
+            self.loadLists();
+
+            console.log(result);
+
+            self.status(self.langs.messages.uploaded, 'success');
+          } else {
+
+            self.status(self.langs.messages.upload_error, 'danger');
+          }
+        },
+        // On upload progress
+        progress    : function (evt, file, xhr, options) {
+          var pr = evt.loaded / evt.total * 100;
+
+          var id = self.getIdByFile(file);
+
+          $('#' + id).find('.media-manager-progress__bar').css({
+            'width' : pr + '%'
+          });
+          
         }
-
-      }, function(files) {
-
-        console.log(files);
-        if ( files.length ) {
-
-          // upload files
-
-        }
-
       });
 
     },
@@ -212,9 +328,15 @@
       if (typeof self.currentData.media === 'undefined')
         return true;
 
-      this.currentData.media = _.filter(self.currentData.all, function (element) {
-        return values.indexOf(element[key]) !== -1;
-      });
+      if (typeof values === 'undefined' || values.length == 0 ) {
+        // Show all
+        this.currentData.media = self.currentData.all;
+      } else {
+        // Filter by specified key for specified values
+        this.currentData.media = _.filter(self.currentData.all, function (element) {
+          return values.indexOf(element[key]) !== -1;
+        });
+      }
 
       this.showContents();
 
@@ -237,16 +359,34 @@
 
     },
 
-    sortData: function (sortby) {
+    sortData: function (sortby, reverse) {
 
       var self = this;
 
       if (typeof self.currentData.media === 'undefined')
         return true;
+      
+      if (sortby.indexOf(':') !== -1 ) {
+        var parts = sortby.split(':');
+        sortby = parts[0];
+        if ( parts[1] == 'desc' ) {
+          reverse = true;
+        } else {
+          reverse = false;
+        }
+      } else {
+        reverse = false;
+      }
 
-      this.currentData.media = _.sortBy(self.currentData.media, function (item) {
-        return item[sortby];
-      });
+      if ( !reverse ) {
+        this.currentData.media = _.sortBy(self.currentData.media, function (item) {
+          return item[sortby];
+        });
+      } else {
+        this.currentData.media = _.sortBy(self.currentData.media, function (item) {
+          return item[sortby];
+        }).reverse();
+      }
 
       this.showContents();
 
@@ -322,9 +462,57 @@
 
       this.$el.find('.media-manager-preview:not(.activated)').click(function (event) {
 
+        switch( true ) {
+
+          case event.shiftKey:
+              self.clickShiftMedia($(this));
+            break;
+
+          case event.ctrlKey:
+          case event.metaKey: // Command key (⌘) / Windows key
+              self.clickCtrlMedia($(this));
+            break;
+
+          default:
+            break;
+
+        }
+
         self.clickMedia($(this));
 
       }).addClass('activated');
+
+    },
+
+    clickShiftMedia: function($media) {
+
+      console.log('shift', this.mode);
+
+      if (this.mode == 'single') {
+
+        $media.closest('.media-manager-preview.selected').nextUntil($media, '.media-manager-preview').addClass('manipulated');
+
+      } else {
+
+        $media.closest('.media-manager-preview.selected').nextUntil($media, '.media-manager-preview').addClass('selected');
+
+      }
+
+    },
+
+    clickCtrlMedia: function($media) {
+
+      console.log('ctrl', this.mode);
+
+      if (this.mode == 'single') {
+
+        $media.addClass('manipulated');
+
+      } else {
+
+        $media.addClass('selected');
+
+      }
 
     },
 
@@ -397,6 +585,12 @@
 
     },
 
+    demanipulateAll: function() {
+
+      this.$el.find('.media-manager-preview.mainpulated').removeClass('mainpulated');
+
+    },
+
     /**
      * Display given data in sidebar
      * @param data
@@ -456,21 +650,7 @@
       if (typeof type == 'undefined')
         type = 'info';
 
-      var icon = 'fa fa-refresh';
-
-      switch (type) {
-
-        case 'danger':
-          icon = 'fa fa-check';
-          break;
-
-        case 'success':
-          icon = 'fa fa-times';
-          break;
-
-      }
-
-      this.$statusbar.html('<p class="text-' + type + ' media-manager-status-text"><i class="' + icon + '"></i> ' + msg + '</p>');
+      this.$statusbar.html('<p class="text-' + type + ' media-manager-status-text">' + msg + '</p>');
 
     }
 
@@ -509,3 +689,40 @@ function humanFileSize(bytes, si) {
   } while (Math.abs(bytes) >= thresh && u < units.length - 1);
   return bytes.toFixed(1) + ' ' + units[u];
 }
+
+
+// Simple JavaScript Templating
+// John Resig - http://ejohn.org/ - MIT Licensed
+(function (){
+  var cache = {};
+
+  this.tmpl = function tmpl(str, data){
+    // Figure out if we're getting a template, or if we need to
+    // load the template - and be sure to cache the result.
+    var fn = !/\W/.test(str) ?
+        cache[str] = cache[str] ||
+            tmpl(document.getElementById(str).innerHTML) :
+
+        // Generate a reusable function that will serve as a template
+        // generator (and which will be cached).
+        new Function("obj",
+            "var p=[],print=function(){p.push.apply(p,arguments);};" +
+
+            // Introduce the data as local variables using with(){}
+            "with(obj){p.push('" +
+
+            // Convert the template into pure JavaScript
+            str
+                .replace(/[\r\t\n]/g, " ")
+                .split("<%").join("\t")
+                .replace(/((^|%>)[^\t]*)'/g, "$1\r")
+                .replace(/\t=(.*?)%>/g, "',$1,'")
+                .split("\t").join("');")
+                .split("%>").join("p.push('")
+                .split("\r").join("\\'")
+            + "');}return p.join('');");
+
+    // Provide some basic currying to the user
+    return data ? fn(data) : fn;
+  };
+})();

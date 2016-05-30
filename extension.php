@@ -159,6 +159,7 @@ return [
             {
 
                 Route::get('/', ['as' => 'sanatorium.inputs.media.all', 'uses' => 'MediaController@getMedia']);
+                Route::any('upload', ['as' => 'sanatorium.inputs.media.upload', 'uses' => 'MediaController@upload']);
                 Route::get('{id}/{type}', ['as' => 'sanatorium.inputs.media.entity', 'uses' => 'MediaController@getMediaAssignedToEntity']);
 
             });

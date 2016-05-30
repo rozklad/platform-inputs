@@ -37,13 +37,20 @@ return [
         ],
 
         'sort' => [
-            'created_at' => 'From oldest',
-            'size'       => 'Size',
-            'name'       => 'Name',
+            'oldest'              => 'From oldest',
+            'newest'              => 'From newest',
+            'smallest'            => 'From smallest',
+            'largest'             => 'From largest',
+            'alphabetically_asc'  => 'From A-Z',
+            'alphabetically_desc' => 'From Z-A',
+            // old values
+            'created_at'          => 'From oldest',
+            'size'                => 'Size',
+            'name'                => 'Name',
         ],
 
         'filter' => [
-            'all'       => 'All uploaded items',
+            'all'       => 'Show all',
             'images'    => 'Images',
             'audio'     => 'Audio',
             'video'     => 'Video',
