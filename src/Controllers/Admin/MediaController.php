@@ -6,6 +6,7 @@ use Platform\Access\Controllers\AdminController;
 use Platform\Tags\Repositories\TagsRepositoryInterface;
 use Platform\Roles\Repositories\RoleRepositoryInterface;
 use Platform\Media\Repositories\MediaRepositoryInterface;
+use League\Flysystem\FileNotFoundException;
 
 class MediaController extends AdminController
 {
@@ -73,7 +74,14 @@ class MediaController extends AdminController
      */
     public function delete($id)
     {
-        $type = $this->media->delete($id) ? 'success' : 'error';
+        try
+        {
+            $type = $this->media->delete($id) ? 'success' : 'error';
+        } catch (FileNotFoundException $e)
+        {
+            // The file as not physically found, but we still may delete the DB entry
+            $type = \Platform\Media\Models\Media::find($id)->delete() ? 'success' : 'error';
+        }
 
         $this->alerts->{$type}(
             trans("platform/media::message.{$type}.delete")
