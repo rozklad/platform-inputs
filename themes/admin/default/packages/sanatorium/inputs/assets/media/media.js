@@ -96,7 +96,7 @@
       this.mode        = ( typeof this.$manager.data('mode') !== 'undefined' ? this.$manager.data('mode') : this.mode );
       this.input_name  = this.$manager.data('input-name');
       this.form_group  = this.$manager.data('form-group');
-      this.$input      = $('[name="' + this.$manager.data('input-name') + '"]');
+      this.$input      = $('[name="' + this.input_name + '"]');
       this.$statusbar  = this.$manager.find('.modal-status');
       this.urls.upload = this.$manager.data('upload-url');
       this.token       = this.$manager.data('token');
@@ -104,6 +104,8 @@
         $upload: this.$manager.find('[data-tab-control-upload]'),
         $library: this.$manager.find('[data-tab-control-library]')
       };
+      this.$preview    = $( this.$manager.data('preview') );
+      this.$external   = $('[data-external-control="' + this.input_name + '"]');
 
     },
 
@@ -126,6 +128,30 @@
       this.listenSearch();
 
       this.activateDnd();
+
+      this.activateExternal();
+
+    },
+
+    /**
+     * Activate external controls
+     */
+    activateExternal: function() {
+
+      var self = this;
+
+      this.$external.click(function(event){
+          event.preventDefault();
+
+          var type = $(this).data('external-type');
+
+          switch( type ) {
+            case 'delete':
+              self.deselectAll();
+            break;
+          }
+
+      });
 
     },
 
@@ -581,6 +607,7 @@
 
     deselectAll: function () {
 
+      this.$input.val('');
       this.$el.find('.media-manager-preview.selected').removeClass('selected');
 
     },

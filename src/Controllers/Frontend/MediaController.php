@@ -63,6 +63,7 @@ class MediaController extends Controller {
                 $media->delete_uri = route('sanatorium.inputs.media.delete', $media->id);
                 $media->email_uri = route('admin.media.email', $media->id);
                 $media->download_uri = route('media.download', $media->path);
+                $media->view_uri = route('media.view', $media->path);
                 $media->tags = $media->tags;
 
                 return $media;

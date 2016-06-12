@@ -39,6 +39,7 @@
     <br>
 
     <!-- Button trigger modal -->
+    @if ( !$entity->{$attribute->slug} )
     <button type="button" class="btn btn-default" data-toggle="modal" data-target="#media-manager-{{ $attribute->slug }}">
         @if ( isset($label) )
             {{ $label }}
@@ -46,6 +47,7 @@
             {{ trans('sanatorium/inputs::types.media.upload.select') }}
         @endif
     </button>
+    @endif
 
     <span class="help-block"></span>
 
@@ -59,7 +61,8 @@
      data-form-group="#form-group-{{ $attribute->slug }}"
      data-search="#media-manager-{{ $attribute->slug }}-search"
      data-token="{{ csrf_token() }}"
-     data-upload-url="{{ route('sanatorium.inputs.media.upload') }}">
+     data-upload-url="{{ route('sanatorium.inputs.media.upload') }}"
+     data-preview=".media-image-preview-{{ $attribute->slug }}">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header bg-modal-secondary">
@@ -253,6 +256,8 @@
 
                         <% if ( medium.is_image ) { %>
                             <img src="<%= medium.thumbnail %>" class="media-manager-preview-image">
+                        <% } else if ( medium.mime == 'image/svg+xml' ) { %>
+                            <img src="<%= medium.view_uri %>" class="media-manager-preview-image">
                         <% } else if ( (medium.mime == 'audio/ogg') || (medium.mime == 'video/mp4') || (medium.mime == 'video/ogg') ) { %>
                             <i class="fa fa-file-movie-o"></i>
                         <% } else if (medium.mime == 'application/zip') { %>
@@ -283,54 +288,64 @@
 
     <h3>{{ trans('sanatorium/inputs::types.media.media_details') }}</h3>
 
-    <div class="media-manager-attachment">
-        <% if ( is_image ) { %>
-            <img src="<%= thumbnail %>">
-        <% } else if ( (mime == 'audio/ogg') || (mime == 'video/mp4') || (mime == 'video/ogg') ) { %>
-            <i class="fa fa-file-movie-o"></i>
-        <% } else if (mime == 'application/zip') { %>
-            <i class="fa fa-file-zip-o"></i>
-        <% } else if (mime == 'application/pdf') { %>
-            <i class="fa fa-file-pdf-o"></i>
-        <% } else { %>
-            <i class="fa fa-file-o"></i>
-        <% } %>
-    </div>
+    <div class="media-manager-detail-block">
 
-    <div class="media-manager-details">
-
-        <div class="filename"><%= name %></div>
-
-        <div class="created_at">
-            <%= moment(created_at).format('MMM DD, YYYY') %>
-        </div>
-
-        <div class="filesize">
-            <%= humanFileSize(size, true) %>
-        </div>
-
-        <div class="dimensions">
+        <div class="media-manager-attachment">
             <% if ( is_image ) { %>
-                <%= width %> &times; <%= height %>
+                <img src="<%= thumbnail %>">
+            <% } else if ( mime == 'image/svg+xml' ) { %>
+                <img src="<%= view_uri %>">
+            <% } else if ( (mime == 'audio/ogg') || (mime == 'video/mp4') || (mime == 'video/ogg') ) { %>
+                <i class="fa fa-file-movie-o"></i>
+            <% } else if (mime == 'application/zip') { %>
+                <i class="fa fa-file-zip-o"></i>
+            <% } else if (mime == 'application/pdf') { %>
+                <i class="fa fa-file-pdf-o"></i>
+            <% } else { %>
+                <i class="fa fa-file-o"></i>
             <% } %>
         </div>
 
-        <div class="mime">
-            <%= mime %>
-        </div>
+        <div class="media-manager-details">
 
-        <div class="accessibility">
-        <% if (private == 1) { %>
-            <i class="fa fa-lock"></i>
-        <% } else { %>
-            <i class="fa fa-unlock"></i>
-        <% } %>
-        </div>
+            <div class="filename">
+                <span>
+                    <%= name %>
+                </span>
+            </div>
 
-        <div class="tags">
-        <% _.each(tags, function(tag) { %>
-            <span class="label label-default"><%= tag.name %></span>
-        <% }); %>
+            <div class="created_at">
+                <%= moment(created_at).format('MMM DD, YYYY') %>
+            </div>
+
+            <div class="filesize">
+                <%= humanFileSize(size, true) %>
+            </div>
+
+            <div class="dimensions">
+                <% if ( is_image ) { %>
+                    <%= width %> &times; <%= height %>
+                <% } %>
+            </div>
+
+            <div class="mime">
+                <%= mime %>
+            </div>
+
+            <div class="accessibility">
+            <% if (private == 1) { %>
+                <i class="fa fa-lock"></i>
+            <% } else { %>
+                <i class="fa fa-unlock"></i>
+            <% } %>
+            </div>
+
+            <div class="tags">
+            <% _.each(tags, function(tag) { %>
+                <span class="label label-default"><%= tag.name %></span>
+            <% }); %>
+            </div>
+
         </div>
 
     </div>

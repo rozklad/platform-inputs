@@ -237,10 +237,29 @@ $manipulated-border-color: #111;
     }
   }
 
+  .media-manager-detail-block {
+    overflow: hidden;
+    clear: both;
+  }
+
   .media-manager-details {
     height: 140px;
+    float: left;
     .filename {
       font-weight: 700;
+      height: 1.6em;
+      overflow: hidden;
+      position: relative;
+      span {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+      }
+      &:hover {
+        overflow: visible;
+
+      }
     }
   }
 
@@ -337,9 +356,49 @@ $upload-color-secondary: rgba($upload-color,0.2);
 }
 
 .sanatorium-inputs-widget-display {
-  text-align: center;
+  position: relative;
   i {
     font-size: 72px;
+  }
+  width: 200px;
+  height: 200px;
+  line-height: 200px;
+  text-align: center;
+  img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+  }
+  &:hover {
+    .sanatorium-inputs-widget-display-btn {
+      display: block;
+    }
+  }
+}
+
+.sanatorium-inputs-widget-display-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 32px;
+  height: 32px;
+  line-height: 32px;
+  border-radius: 50%;
+  display: none;
+  border: 1px solid #eee;
+  color: #aaa;
+  &:hover {
+    border: 1px solid #aaa;
+    color: #666;
+  }
+  &.edit {
+
+  }
+  &.delete {
+    top: 2*18px;
+  }
+  i {
+    font-size: 14px;
   }
 }
 
