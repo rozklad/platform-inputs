@@ -57,13 +57,16 @@ class MediaController extends Controller {
             case 'Platform\Media\Models\Media':
 
                 $media->public_url = self::getPublicUrl($media, '+2 days');
-                $media->thumbnail_uri = url($media->thumbnail);
+                //$media->thumbnail_uri = url($media->thumbnail);
+                $media->thumbnail_uri = \StorageUrl::url($media->path);
+                $media->view_uri = \StorageUrl::url($media->path);
+                $media->thumbnail = \StorageUrl::url($media->path);
                 $media->view_uri = route('media.view', $media->path);
                 $media->edit_uri = route('admin.media.edit', $media->id);
                 $media->delete_uri = route('sanatorium.inputs.media.delete', $media->id);
                 $media->email_uri = route('admin.media.email', $media->id);
                 $media->download_uri = route('media.download', $media->path);
-                $media->view_uri = route('media.view', $media->path);
+                //$media->view_uri = route('media.view', $media->path);
                 $media->tags = $media->tags;
 
                 return $media;
