@@ -63,8 +63,8 @@
     urls          : {
       upload: null
     },
-    icon: {
-      def:   'fa fa-file-o',
+    icon          : {
+      def  : 'fa fa-file-o',
       image: 'fa fa-file-pdf-o',
       audio: 'fa fa-file-movie-o',
       video: 'fa fa-file-movie-o',
@@ -86,26 +86,34 @@
 
     cacheSelectors: function () {
 
-      this.$loadable   = this.$manager.find('[data-media-load]');
-      this.$sorters    = this.$manager.find('[data-media-sort]');
-      this.$filters    = this.$manager.find('[data-media-filter]');
-      this.$dropzone   = this.$manager.find('[data-media-dropzone]');
-      this.$sidebar    = this.$manager.find('.media-manager-sidebar');
-      this.template    = this.$manager.data('preview-template');
-      this.$search     = $(this.$manager.data('search'));
-      this.mode        = ( typeof this.$manager.data('mode') !== 'undefined' ? this.$manager.data('mode') : this.mode );
-      this.input_name  = this.$manager.data('input-name');
-      this.form_group  = this.$manager.data('form-group');
-      this.$input      = $('[name="' + this.input_name + '"]');
-      this.$statusbar  = this.$manager.find('.modal-status');
-      this.urls.upload = this.$manager.data('upload-url');
-      this.token       = this.$manager.data('token');
-      this.controls    = {
-        $upload: this.$manager.find('[data-tab-control-upload]'),
+      this.$loadable         = this.$manager.find('[data-media-load]');
+      this.$sorters          = this.$manager.find('[data-media-sort]');
+      this.$filters          = this.$manager.find('[data-media-filter]');
+      this.$dropzone         = this.$manager.find('[data-media-dropzone]');
+      this.$sidebar          = this.$manager.find('.media-manager-sidebar');
+      this.template          = this.$manager.data('media-preview-template');
+      this.$search           = $(this.$manager.data('search'));
+      this.mode              = ( typeof this.$manager.data('mode') !== 'undefined' ? this.$manager.data('mode') : this.mode );
+      this.input_name        = this.$manager.data('input-name');
+      this.form_group        = this.$manager.data('form-group');
+      this.$input            = $('[name="' + this.input_name + '"]');
+      this.$statusbar        = this.$manager.find('.modal-status');
+      this.urls.upload       = this.$manager.data('upload-url');
+      this.token             = this.$manager.data('token');
+      this.controls          = {
+        $upload : this.$manager.find('[data-tab-control-upload]'),
         $library: this.$manager.find('[data-tab-control-library]')
       };
-      this.$preview    = $( this.$manager.data('preview') );
-      this.$external   = $('[data-external-control="' + this.input_name + '"]');
+      this.$preview          = $(this.$manager.data('preview'));
+      this.$external         = $('[data-external-control="' + this.input_name + '"]');
+      this.$previewContainer = $(this.$manager.data('preview-container'));
+      this.$previewTemplate  = $(this.$manager.data('preview-template'));
+
+    },
+
+    getCurrentInputs: function() {
+
+      return $('[name="' + this.input_name + '"]');
 
     },
 
@@ -136,20 +144,20 @@
     /**
      * Activate external controls
      */
-    activateExternal: function() {
+    activateExternal: function () {
 
       var self = this;
 
-      this.$external.click(function(event){
-          event.preventDefault();
+      this.$external.click(function (event) {
+        event.preventDefault();
 
-          var type = $(this).data('external-type');
+        var type = $(this).data('external-type');
 
-          switch( type ) {
-            case 'delete':
-              self.deselectAll();
+        switch (type) {
+          case 'delete':
+            self.deselectAll();
             break;
-          }
+        }
 
       });
 
@@ -162,7 +170,7 @@
 
       var self = this;
 
-      this.$dropzone.each(function(){
+      this.$dropzone.each(function () {
 
         var $dropzone = $(this);
 
@@ -176,7 +184,7 @@
 
         }, function (files) {
 
-          $('a[href="'+ self.controls.$library.attr('href') +'"]').tab('show');
+          $('a[href="' + self.controls.$library.attr('href') + '"]').tab('show');
 
           if (files.length) {
 
@@ -210,13 +218,13 @@
 
     },
 
-    getIdByFile: function(file) {
+    getIdByFile: function (file) {
 
-      return 'file-'+FileAPI.uid(file);
+      return 'file-' + FileAPI.uid(file);
 
     },
 
-    showUploading: function(file) {
+    showUploading: function (file) {
 
       var self = this;
 
@@ -225,14 +233,14 @@
       // Add loading thumbs in all manager list
       // later this might need to be revised (as the shown data might be different)
       this.$manager.find('.media-manager-list').prepend(
-          tmpl($('#file-ejs').html(), { file: file, icon: self.icon })
+          tmpl($('#file-ejs').html(), {file: file, icon: self.icon})
       );
 
-      if( /^image/.test(file.type) ){
-        FileAPI.Image(file).preview(self.thumbnailSize).rotate('auto').get(function (err, img){
-          
+      if (/^image/.test(file.type)) {
+        FileAPI.Image(file).preview(self.thumbnailSize).rotate('auto').get(function (err, img) {
+
           $('#' + id).find('.media-manager-preview-uploader').replaceWith(img);
-          
+
         });
       }
 
@@ -240,16 +248,16 @@
 
     uploadFile: function (upload) {
 
-      var self  = this;
+      var self = this;
 
       self.status(self.langs.messages.uploading);
 
       var xhr = FileAPI.upload({
-        url         : self.urls.upload,
-        files       : {file: upload},
-        data        : {_token: self.token},
+        url     : self.urls.upload,
+        files   : {file: upload},
+        data    : {_token: self.token},
         // On upload complete
-        complete    : function (err, xhr) {
+        complete: function (err, xhr) {
           if (!err) {
             var result = xhr.responseText;
             self.loadLists();
@@ -263,15 +271,15 @@
           }
         },
         // On upload progress
-        progress    : function (evt, file, xhr, options) {
+        progress: function (evt, file, xhr, options) {
           var pr = evt.loaded / evt.total * 100;
 
           var id = self.getIdByFile(file);
 
           $('#' + id).find('.media-manager-progress__bar').css({
-            'width' : pr + '%'
+            'width': pr + '%'
           });
-          
+
         }
       });
 
@@ -354,7 +362,7 @@
       if (typeof self.currentData.media === 'undefined')
         return true;
 
-      if (typeof values === 'undefined' || values.length == 0 ) {
+      if (typeof values === 'undefined' || values.length == 0) {
         // Show all
         this.currentData.media = self.currentData.all;
       } else {
@@ -391,11 +399,11 @@
 
       if (typeof self.currentData.media === 'undefined')
         return true;
-      
-      if (sortby.indexOf(':') !== -1 ) {
+
+      if (sortby.indexOf(':') !== -1) {
         var parts = sortby.split(':');
-        sortby = parts[0];
-        if ( parts[1] == 'desc' ) {
+        sortby    = parts[0];
+        if (parts[1] == 'desc') {
           reverse = true;
         } else {
           reverse = false;
@@ -404,7 +412,7 @@
         reverse = false;
       }
 
-      if ( !reverse ) {
+      if (!reverse) {
         this.currentData.media = _.sortBy(self.currentData.media, function (item) {
           return item[sortby];
         });
@@ -449,6 +457,24 @@
 
     },
 
+    findMedia: function (id) {
+
+      if (typeof this.currentData === 'undefined') return null;
+
+      if (this.currentData == null) return null;
+
+      if (typeof this.currentData.all === 'undefined') return null;
+
+      for (var key in this.currentData.all) {
+
+        if (this.currentData.all[key].id == id) {
+          return this.currentData.all[key];
+        }
+
+      }
+
+    },
+
     showContents: function () {
 
       var template = $('#' + this.template).html(),
@@ -488,15 +514,15 @@
 
       this.$el.find('.media-manager-preview:not(.activated)').click(function (event) {
 
-        switch( true ) {
+        switch (true) {
 
           case event.shiftKey:
-              self.clickShiftMedia($(this));
+            self.clickShiftMedia($(this));
             break;
 
           case event.ctrlKey:
           case event.metaKey: // Command key (⌘) / Windows key
-              self.clickCtrlMedia($(this));
+            self.clickCtrlMedia($(this));
             break;
 
           default:
@@ -510,7 +536,7 @@
 
     },
 
-    clickShiftMedia: function($media) {
+    clickShiftMedia: function ($media) {
 
       console.log('shift', this.mode);
 
@@ -526,7 +552,7 @@
 
     },
 
-    clickCtrlMedia: function($media) {
+    clickCtrlMedia: function ($media) {
 
       console.log('ctrl', this.mode);
 
@@ -566,6 +592,8 @@
 
       }
 
+      this.updateSelectedPreview();
+
       this.showSidebar($media.data());
 
     },
@@ -600,7 +628,7 @@
           value: id,
           type : 'hidden'
         }).appendTo(this.form_group);
-
+        console.log(id);
       }
 
     },
@@ -612,10 +640,31 @@
 
     },
 
-    demanipulateAll: function() {
+    demanipulateAll: function () {
 
       this.$el.find('.media-manager-preview.mainpulated').removeClass('mainpulated');
 
+    },
+
+    updateSelectedPreview: function () {
+
+      var self = this,
+          media = [];
+
+      this.getCurrentInputs().each(function () {
+
+        var id = $(this).val();
+
+        if ( media != null )
+          media.push(self.findMedia(id));
+
+      });
+
+      var template = this.$previewTemplate.html(),
+          html     = _.template(template)({media: media});
+      
+      this.$previewContainer.html(html);
+      
     },
 
     /**
@@ -720,10 +769,10 @@ function humanFileSize(bytes, si) {
 
 // Simple JavaScript Templating
 // John Resig - http://ejohn.org/ - MIT Licensed
-(function (){
+(function () {
   var cache = {};
 
-  this.tmpl = function tmpl(str, data){
+  this.tmpl = function tmpl(str, data) {
     // Figure out if we're getting a template, or if we need to
     // load the template - and be sure to cache the result.
     var fn = !/\W/.test(str) ?

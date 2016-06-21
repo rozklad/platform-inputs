@@ -18,7 +18,9 @@
 
     </label>
 
-    @display($entity, $attribute->slug, $mode)
+    <div id="preview-container-{{ $attribute->slug }}">
+        @display($entity, $attribute->slug, $mode)
+    </div>
 
     @if ( $mode == 'multiple' )
         @if ( is_array($entity->{$attribute->slug}) )
@@ -57,12 +59,14 @@
 <!-- Modal: data attributes contain specific variables for the request -->
 <div class="modal modal-xlg fade media-manager" id="media-manager-{{ $attribute->slug }}" tabindex="-1" role="dialog" aria-labelledby="media-manager-{{ $attribute->slug }}-label"
      data-mode="{{ $mode }}" data-input-name="{{ ( $mode == 'multiple' ? $attribute->slug . '[]' : $attribute->slug ) }}"
-     data-preview-template="media-preview-template-{{ $attribute->slug }}"
+     data-media-preview-template="media-preview-template-{{ $attribute->slug }}"
      data-form-group="#form-group-{{ $attribute->slug }}"
      data-search="#media-manager-{{ $attribute->slug }}-search"
      data-token="{{ csrf_token() }}"
      data-upload-url="{{ route('sanatorium.inputs.media.upload') }}"
-     data-preview=".media-image-preview-{{ $attribute->slug }}">
+     data-preview=".media-image-preview-{{ $attribute->slug }}"
+     data-preview-container="#preview-container-{{ $attribute->slug }}"
+     data-preview-template="#preview-template-{{ $attribute->slug }}">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header bg-modal-secondary">
@@ -208,31 +212,47 @@
         </div>
     </div>
 
-
-    <!--
-    <div class="panel panel-default" id="file-<%=FileAPI.uid(file)%>" class="js-file b-file b-file_<%=file.type.split('/')[0]%>">
-        <div class="panel-body">
-            <div class="row">
-                <div class="col-xs-3 file__left">
-                    <i class="<%=icon[file.type.split('/')[0]]||icon.def%> media-manager-preview-uploader"></i>
-                </div>
-                <div class="col-xs-8">
-                        <a class="file__name"><%=file.name%></a>
-                        <div class="file__info">size: <%=(file.size/FileAPI.KB).toFixed(2)%> KB</div>
-                        <div class="file__bar" style="display: none">
-                            <div class="progress"><div class="progress__bar"></div></div>
-                        </div>
-                </div>
-                <div class="col-xs-1 text-right">
-                    <i class="file__abort" title="abort">&times;</i>
-                </div>
-            </div>
-        </div>
-    </div>
-    -->
 </script>
 
 <div class="media-manager-uploading-area"></div>
+
+<script type="text/x-template-lodash" id="preview-template-{{ $attribute->slug }}">
+
+    <% if ( media.length > 0 ) { %>
+
+        <% _.each( media, function( medium, key ){ %>
+
+            <div class="sanatorium-inputs-widget-display media-image-preview">
+
+                <% if ( medium.is_image ) { %>
+                    <img src="<%= medium.thumbnail %>">
+                <% } else if ( medium.mime == 'image/svg+xml' ) { %>
+                    <img src="<%= medium.view_uri %>">
+                <% } else if ( (medium.mime == 'audio/ogg') || (medium.mime == 'video/mp4') || (medium.mime == 'video/ogg') ) { %>
+                    <i class="fa fa-file-movie-o"></i>
+                <% } else if (medium.mime == 'application/zip') { %>
+                    <i class="fa fa-file-zip-o"></i>
+                <% } else if (medium.mime == 'application/pdf') { %>
+                    <i class="fa fa-file-pdf-o"></i>
+                <% } else { %>
+                    <i class="fa fa-file-o"></i>
+                <% } %>
+
+                <a href="#" class="sanatorium-inputs-widget-display-btn edit" data-toggle="modal" data-target="#media-manager-{{ $attribute->slug }}">
+                    <i class="fa fa-pencil"></i>
+                </a>
+
+                <a href="#" class="sanatorium-inputs-widget-display-btn delete"  data-external-control="{{ $attribute->slug }}" data-external-type="delete">
+                    <i class="fa fa-trash"></i>
+                </a>
+
+            </div>
+
+        <% }); %>
+
+    <% } %>
+
+</script>
 
 <script type="text/x-template-lodash" id="media-preview-template-{{ $attribute->slug }}">
 
