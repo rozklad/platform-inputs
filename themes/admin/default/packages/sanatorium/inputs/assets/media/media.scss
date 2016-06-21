@@ -423,3 +423,74 @@ $upload-color-secondary: rgba($upload-color,0.2);
     }
   }
 }
+
+
+
+
+/**
+ * Modal
+ */
+
+$screen-xs-max: 767px;
+.modal {
+  &.modal-xlg {
+    .modal-dialog {
+      width: 90%;
+      @media(max-width:$screen-xs-max) {
+        margin: 20px auto;
+      }
+    }
+    .modal-header {
+      height: 12vh;
+      text-align: left;
+      border-bottom: 1px solid #dedede;
+      position: relative;
+      .nav-tabs {
+        position: absolute;
+        bottom: -0;
+        border-bottom-width: 0;
+        left: 0px;
+        right: 0px;
+        width: 100%;
+        li:first-child {
+          padding-left: 20px;
+        }
+        li {
+          a {
+            border-bottom-width: 0;
+          }
+          &.active {
+            a {
+              background-color: #fff;
+            }
+          }
+        }
+      }
+    }
+    .modal-footer {
+      text-align: right;
+      height: 9vh;
+      padding-top: 25px;
+      border-top: 1px solid #dedede;
+    }
+    .modal-body {
+      padding-left: 0;
+      padding-right: 0;
+      padding-bottom: 0;
+      height: 71vh;
+      position: relative;
+      & > .row {
+        height: 71vh;
+        & > div {
+          height: 71vh;
+          &.col-sm-2 {
+            border-left: 1px solid #dedede;
+          }
+        }
+      }
+    }
+    .btn-primary {
+      display: inline-block;
+    }
+  }
+}
