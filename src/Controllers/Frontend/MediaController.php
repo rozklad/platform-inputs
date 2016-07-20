@@ -58,8 +58,8 @@ class MediaController extends Controller {
             case 'Platform\Media\Models\Media':
 
                 $media->public_url = StorageUrl::url($media->path);
-                $media->thumbnail_uri = StorageUrl::url( \Sanatorium\Shop\Models\Product::thumbnailPath($media, 300) ); // @todo: move the logic from product
-                $media->thumbnail = StorageUrl::url( \Sanatorium\Shop\Models\Product::thumbnailPath($media, 300) );
+                $media->thumbnail_uri = StorageUrl::url( \Sanatorium\Inputs\Models\Media::thumbnailPath($media, 300) );
+                $media->thumbnail = StorageUrl::url( \Sanatorium\Inputs\Models\Media::thumbnailPath($media, 300) );
                 $media->view_uri = route('media.view', $media->path);
                 $media->edit_uri = route('admin.media.edit', $media->id);
                 $media->delete_uri = route('sanatorium.inputs.media.delete', $media->id);

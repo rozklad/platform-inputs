@@ -67,7 +67,7 @@ return [
     |
     */
 
-    'version' => '1.0.3',
+    'version' => '1.0.4',
 
     /*
     |--------------------------------------------------------------------------
@@ -85,6 +85,7 @@ return [
 
     'require' => [
         'platform/attributes',
+        'platform/media',
     ],
 
     /*
@@ -178,6 +179,13 @@ return [
             {
 
                 Route::delete('{id}', ['as' => 'sanatorium.inputs.media.delete', 'uses' => 'MediaController@delete']);
+
+                //Route::get('files_list', ['as' => 'admin.media.files_list', 'uses' => 'MediaController@filesList']);
+                // Used by Imperavi redactor image media manager, overrides platform/media
+                Route::get('images_list', ['as' => 'admin.media.images_list', 'uses' => 'MediaController@imagesList']);
+
+                //Route::post('upload', ['as' => 'admin.media.upload', 'uses' => 'MediaController@upload']);
+                //Route::post('link_media', ['as' => 'admin.media.link_media', 'uses' => 'MediaController@linkMedia']);
 
             });
 

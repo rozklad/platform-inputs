@@ -7,6 +7,7 @@ use Platform\Tags\Repositories\TagsRepositoryInterface;
 use Platform\Roles\Repositories\RoleRepositoryInterface;
 use Platform\Media\Repositories\MediaRepositoryInterface;
 use League\Flysystem\FileNotFoundException;
+use StorageUrl;
 
 class MediaController extends AdminController
 {
@@ -98,6 +99,38 @@ class MediaController extends AdminController
         }
 
         return redirect()->route('admin.media.all');
+    }
+
+    /**
+     * Media images list.
+     *
+     * @return string
+     */
+    public function imagesList()
+    {
+        $columns = [
+            'name'      => 'title',
+            'path'      => 'image',
+            'thumbnail' => 'thumb',
+            'id',
+        ];
+
+        $settings = [
+            'sort'      => 'created_at',
+            'direction' => 'desc',
+        ];
+
+        $transformer = function ($media) {
+            return [
+                'thumb' => StorageUrl::url( \Sanatorium\Inputs\Models\Media::thumbnailPath($media, 300) ),
+                'image' => route('media.view', $media->image),
+                'title' => $media->name,
+            ];
+        };
+
+        $data = $this->media->grid()->where('is_image', true);
+
+        return datagrid($data, $columns, $settings, $transformer)->getDataHandler()->getResults();
     }
 
 }
