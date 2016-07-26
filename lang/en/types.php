@@ -13,6 +13,8 @@ return [
         'image'     => 'Image',
         'video'     => 'Video',
         'gallery'   => 'Gallery',
+        'category'  => 'Category',
+        'date'      => 'Date',
     ],
 
     'image' => [
