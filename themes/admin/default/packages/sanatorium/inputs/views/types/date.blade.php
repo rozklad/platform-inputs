@@ -4,7 +4,7 @@
         {{{ $attribute->name }}}
     </label>
 
-    <input class="form-control redactor" name="{{ $attribute->slug }}" id="{{ $attribute->slug }}">
+    <input type="date" class="form-control" name="{{ $attribute->slug }}" id="{{ $attribute->slug }}" value="{{ $entity->{$attribute->slug} }}">
 
     <span class="help-block">{{{ Alert::onForm($attribute->slug) }}}</span>
 
