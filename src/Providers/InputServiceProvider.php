@@ -16,6 +16,9 @@ class InputServiceProvider extends ServiceProvider {
 
 		// Register the Blade @display widget
 		$this->registerDisplayWidget();
+
+        // Register the blade @attributesnot widget
+        $this->registerAttributesnotWidget();
 	}
 
 	/**
@@ -61,5 +64,12 @@ class InputServiceProvider extends ServiceProvider {
             return "<?php echo Widget::make('sanatorium/inputs::display.show', array$value); ?>";
         });
 	}
+
+	public function registerAttributesnotWidget()
+    {
+        $this->app['blade.compiler']->directive('attributesnot', function ($value) {
+            return "<?php echo Widget::make('sanatorium/inputs::entity.show', array$value); ?>";
+        });
+    }
 
 }
