@@ -4,9 +4,9 @@
         <div class="sanatorium-inputs-widget-display media-image-preview media-image-preview-{{ $slug }}">
         @if ( isset($medium) && $medium->is_image || $medium->mime == 'image/svg+xml' )
             @if ( $medium->is_image )
-                <img src="{{ $medium->thumbnail }}" alt="{{ $medium->name }}">
+                <img src="{{ StorageUrl::url( \Sanatorium\Inputs\Models\Media::thumbnailPath($medium, 300) ) }}" alt="{{ $medium->name }}">
             @elseif ( $medium->mime == 'image/svg+xml' )
-                <img src="{{ route('media.view', $medium->path) }}" alt="{{ $medium->name }}">
+                <img src="{{ StorageUrl::url( \Sanatorium\Inputs\Models\Media::thumbnailPath($medium, 300) ) }}" alt="{{ $medium->name }}">
             @endif
         @else
             @if ( $medium->mime == 'audio/ogg' || $medium->mime == 'video/mp4' || $medium->mime == 'video/ogg' )
