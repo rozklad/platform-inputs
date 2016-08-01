@@ -15,6 +15,7 @@ return [
         'gallery'   => 'Gallery',
         'category'  => 'Category',
         'date'      => 'Date',
+        'scale'     => 'Scale',
     ],
 
     'image' => [

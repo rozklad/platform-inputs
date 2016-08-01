@@ -44,6 +44,7 @@ class InputServiceProvider extends ServiceProvider {
 			'gallery'		 	=> new Types\GalleryType,
 			'category'			=> new Types\CategoryType,
             'date'			    => new Types\DateType,
+            'scale'             => new Types\ScaleType,
         ];
 
         $manager = $this->app['platform.attributes.manager'];
