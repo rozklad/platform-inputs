@@ -1,6 +1,7 @@
+<?php $rand = rand(); ?>
 <div class="form-group{{ Alert::onForm($attribute->slug, ' has-error') }}">
 
-    <label for="{{ $attribute->slug }}" class="control-label">
+    <label for="{{ $attribute->slug . $rand }}" class="control-label">
         {{{ $attribute->name }}}
     </label>
 
@@ -11,12 +12,12 @@
                    max="100"
                    value="{{ $entity->{$attribute->slug} }}"
                    name="{{ $attribute->slug }}"
-                   id="{{ $attribute->slug }}"
-                   step="1" oninput="outputUpdate{{ str_replace('-', '', $attribute->slug) }}(value)">
+                   id="{{ $attribute->slug . $rand }}"
+                   step="1" oninput="outputUpdate{{ str_replace('-', '', $attribute->slug . $rand) }}(value)">
 
         </div>
         <div class="col-xs-1 text-center">
-            <output for="{{ $attribute->slug }}" id="output{{ $attribute->slug }}">{{ $entity->{$attribute->slug} or '50' }}</output>
+            <output for="{{ $attribute->slug . $rand }}" id="output{{ $attribute->slug . $rand }}">{{ $entity->{$attribute->slug} or '50' }}</output>
         </div>
     </div>
 
@@ -25,8 +26,9 @@
 </div>
 
 <script type="text/javascript">
-    function outputUpdate{{ str_replace('-', '', $attribute->slug) }}(vol) {
-        document.querySelector('#output{{ $attribute->slug }}').value = vol;
+    function outputUpdate{{ str_replace('-', '', $attribute->slug . $rand) }}(vol) {
+        document.querySelector('#output{{ $attribute->slug . $rand }}').value = vol;
+        document.querySelector('#{{ $attribute->slug . $rand }}').value = vol;
     }
 </script>
 

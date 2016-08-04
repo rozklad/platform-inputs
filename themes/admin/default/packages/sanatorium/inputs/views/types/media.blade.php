@@ -115,7 +115,7 @@
 
                             <p class="upload-or">{{ trans('sanatorium/inputs::types.media.upload.or') }}</p>
 
-                            <button type="button" class="btn btn-default btn-upload">
+                            <button type="button" class="btn btn-default btn-upload" data-toggle="tab" href="#media-manager-{{ $attribute->slug }}-library">
                                 {{ trans('sanatorium/inputs::types.media.upload.select') }}
                             </button>
 
