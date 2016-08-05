@@ -385,10 +385,11 @@ $upload-color-secondary: rgba($upload-color,0.2);
   line-height: 32px;
   border-radius: 50%;
   display: none;
-  border: 1px solid #eee;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0,0,0,0.4);
   color: #aaa;
   &:hover {
-    border: 1px solid #aaa;
+    box-shadow: 0 0 10px rgba(0,0,0,0.8);
     color: #666;
   }
   &.edit {

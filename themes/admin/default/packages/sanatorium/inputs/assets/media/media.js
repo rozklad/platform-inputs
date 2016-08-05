@@ -107,7 +107,8 @@
       this.$preview          = $(this.$manager.data('preview'));
       this.$external         = $('[data-external-control="' + this.input_name + '"]');
       this.$previewContainer = $(this.$manager.data('preview-container'));
-      this.$previewTemplate  = $(this.$manager.data('preview-template'));
+      this.$previewTemplate  = $('#preview-template-' + this.input_name);
+      this.$btnTrigger       = $('.btn-trigger-' + this.input_name);
 
     },
 
@@ -148,6 +149,9 @@
 
       var self = this;
 
+      // If the external buttons were not cached before (loading new previewTemplate)
+      this.$external = $('[data-external-control="' + this.input_name + '"]');
+
       this.$external.click(function (event) {
         event.preventDefault();
 
@@ -156,6 +160,7 @@
         switch (type) {
           case 'delete':
             self.deselectAll();
+            self.toggleImagePreview();
             break;
         }
 
@@ -282,6 +287,16 @@
 
         }
       });
+
+    },
+
+    /**
+     * Hide preview and show select media button
+     */
+    toggleImagePreview: function() {
+
+      this.$previewContainer.html('');
+      this.$btnTrigger.removeClass('hidden');
 
     },
 
@@ -636,7 +651,8 @@
     deselectAll: function () {
 
       this.$input.val('');
-      this.$el.find('.media-manager-preview.selected').removeClass('selected');
+      if ( typeof this.$el != 'undefined' )
+        this.$el.find('.media-manager-preview.selected').removeClass('selected');
 
     },
 
@@ -662,9 +678,11 @@
 
       var template = this.$previewTemplate.html(),
           html     = _.template(template)({media: media});
-      
+
       this.$previewContainer.html(html);
-      
+
+      this.activateExternal();
+
     },
 
     /**

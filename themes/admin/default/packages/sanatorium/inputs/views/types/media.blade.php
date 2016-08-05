@@ -41,15 +41,14 @@
     <br>
 
     <!-- Button trigger modal -->
-    @if ( !$entity->{$attribute->slug} )
-    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#media-manager-{{ $attribute->slug }}">
+    <button type="button" class="btn btn-default btn-trigger-{{ $attribute->slug }} {{ $entity->{$attribute->slug} ? 'hidden' : ''}}" data-toggle="modal" data-target="#media-manager-{{ $attribute->slug }}">
         @if ( isset($label) )
             {{ $label }}
         @else
             {{ trans('sanatorium/inputs::types.media.upload.select') }}
         @endif
     </button>
-    @endif
+
 
     <span class="help-block"></span>
 
@@ -81,19 +80,19 @@
                 <ul class="nav nav-tabs original" role="tablist">
                     <li role="presentation" class="active">
                         <a href="#media-manager-{{ $attribute->slug }}-current"
-                            aria-controls="media-manager-{{ $attribute->slug }}-current"
-                            role="tab"
-                            data-toggle="tab"
-                            data-tab-control-current>
+                           aria-controls="media-manager-{{ $attribute->slug }}-current"
+                           role="tab"
+                           data-toggle="tab"
+                           data-tab-control-current>
                             {{ trans('sanatorium/inputs::types.media.media_entity') }}
                         </a>
                     </li>
                     <li role="presentation">
                         <a href="#media-manager-{{ $attribute->slug }}-library"
-                            aria-controls="media-manager-{{ $attribute->slug }}-library"
-                            role="tab"
-                            data-toggle="tab"
-                            data-tab-control-library>
+                           aria-controls="media-manager-{{ $attribute->slug }}-library"
+                           role="tab"
+                           data-toggle="tab"
+                           data-tab-control-library>
                             {{ trans('sanatorium/inputs::types.media.media_library') }}
                         </a>
                     </li>
