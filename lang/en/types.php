@@ -16,6 +16,10 @@ return [
         'category'  => 'Category',
         'date'      => 'Date',
         'scale'     => 'Scale',
+        'relation'  => 'Relation',
+        'phone'     => 'Phone',
+        'url'       => 'URL',
+        'email'     => 'E-mail',
     ],
 
     'image' => [

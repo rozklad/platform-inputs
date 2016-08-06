@@ -19,6 +19,13 @@ class InputServiceProvider extends ServiceProvider {
 
         // Register the blade @attributesnot widget
         $this->registerAttributesnotWidget();
+
+        // Register relations manager
+        $this->bindIf('sanatorium.inputs.relations', 'Sanatorium\Inputs\Repositories\RelationsRepository');
+
+        // Register default relations
+        $this->registerRelations();
+
 	}
 
 	/**
@@ -45,6 +52,10 @@ class InputServiceProvider extends ServiceProvider {
 			'category'			=> new Types\CategoryType,
             'date'			    => new Types\DateType,
             'scale'             => new Types\ScaleType,
+            'phone'             => new Types\PhoneType,
+            'url'               => new Types\UrlType,
+            'email'             => new Types\EmailType,
+            'relation'          => new Types\RelationType,
         ];
 
         $manager = $this->app['platform.attributes.manager'];
@@ -71,6 +82,25 @@ class InputServiceProvider extends ServiceProvider {
         $this->app['blade.compiler']->directive('attributesnot', function ($value) {
             return "<?php echo Widget::make('sanatorium/inputs::entity.show', array$value); ?>";
         });
+    }
+
+    public function registerRelations()
+    {
+        try
+        {
+            // Register the attributes namespace
+            /*$this->app['sanatorium.inputs.relations']->registerRelation(
+                'qualification', 'Sleighdogs\Qualifications\Models\Qualification'
+            );*/
+
+            $this->app['sanatorium.inputs.relations']->registerRelation(
+                'page', 'Platform\Pages\Models\Page'
+            );
+
+        } catch (\ReflectionException $e)
+        {
+            // sanatorium/inputs is not installed or does not support relations
+        }
     }
 
 }

@@ -67,7 +67,7 @@ return [
     |
     */
 
-    'version' => '1.1.2',
+    'version' => '1.2.0',
 
     /*
     |--------------------------------------------------------------------------
@@ -126,9 +126,10 @@ return [
 
     'providers' => [
 
-        'Sanatorium\Inputs\Providers\InputServiceProvider',
+		'Sanatorium\Inputs\Providers\InputServiceProvider',
+		'Sanatorium\Inputs\Providers\GroupServiceProvider',
 
-    ],
+	],
 
     /*
     |--------------------------------------------------------------------------
@@ -145,53 +146,35 @@ return [
     |
     */
 
-    'routes' => function (ExtensionInterface $extension, Application $app)
-    {
+    'routes' => function(ExtensionInterface $extension, Application $app)
+	{
+		Route::group([
+				'prefix'    => admin_uri().'/inputs/groups',
+				'namespace' => 'Sanatorium\Inputs\Controllers\Admin',
+			], function()
+			{
+				Route::get('/' , ['as' => 'admin.sanatorium.inputs.groups.all', 'uses' => 'GroupsController@index']);
+				Route::post('/', ['as' => 'admin.sanatorium.inputs.groups.all', 'uses' => 'GroupsController@executeAction']);
 
-        Route::group([
-            'prefix'    => 'inputs',
-            'namespace' => 'Sanatorium\Inputs\Controllers\Frontend',
-        ], function ()
-        {
+				Route::get('grid', ['as' => 'admin.sanatorium.inputs.groups.grid', 'uses' => 'GroupsController@grid']);
 
-            Route::group([
-                'prefix' => 'media',
-            ], function ()
-            {
+				Route::get('create' , ['as' => 'admin.sanatorium.inputs.groups.create', 'uses' => 'GroupsController@create']);
+				Route::post('create', ['as' => 'admin.sanatorium.inputs.groups.create', 'uses' => 'GroupsController@store']);
 
-                Route::get('/', ['as' => 'sanatorium.inputs.media.all', 'uses' => 'MediaController@getMedia']);
-                Route::any('upload', ['as' => 'sanatorium.inputs.media.upload', 'uses' => 'MediaController@upload']);
-                Route::get('{id}/{type}', ['as' => 'sanatorium.inputs.media.entity', 'uses' => 'MediaController@getMediaAssignedToEntity']);
+				Route::get('{id}'   , ['as' => 'admin.sanatorium.inputs.groups.edit'  , 'uses' => 'GroupsController@edit']);
+				Route::post('{id}'  , ['as' => 'admin.sanatorium.inputs.groups.edit'  , 'uses' => 'GroupsController@update']);
 
-            });
+				Route::delete('{id}', ['as' => 'admin.sanatorium.inputs.groups.delete', 'uses' => 'GroupsController@delete']);
+			});
 
-        });
-
-        Route::group([
-           'prefix' => admin_uri(),
-            'namespace' => 'Sanatorium\Inputs\Controllers\Admin',
-        ], function()
-        {
-
-            Route::group([
-                'prefix' => 'media',
-            ], function ()
-            {
-
-                Route::delete('{id}', ['as' => 'sanatorium.inputs.media.delete', 'uses' => 'MediaController@delete']);
-
-                //Route::get('files_list', ['as' => 'admin.media.files_list', 'uses' => 'MediaController@filesList']);
-                // Used by Imperavi redactor image media manager, overrides platform/media
-                Route::get('images_list', ['as' => 'admin.media.images_list', 'uses' => 'MediaController@imagesList']);
-
-                //Route::post('upload', ['as' => 'admin.media.upload', 'uses' => 'MediaController@upload']);
-                //Route::post('link_media', ['as' => 'admin.media.link_media', 'uses' => 'MediaController@linkMedia']);
-
-            });
-
-        });
-
-    },
+		Route::group([
+			'prefix'    => 'inputs/groups',
+			'namespace' => 'Sanatorium\Inputs\Controllers\Frontend',
+		], function()
+		{
+			Route::get('/', ['as' => 'sanatorium.inputs.groups.index', 'uses' => 'GroupsController@index']);
+		});
+	},
 
     /*
     |--------------------------------------------------------------------------
@@ -230,10 +213,41 @@ return [
     |
     */
 
-    'permissions' => function (Permissions $permissions)
-    {
+    'permissions' => function(Permissions $permissions)
+	{
+		$permissions->group('group', function($g)
+		{
+			$g->name = 'Groups';
 
-    },
+			$g->permission('group.index', function($p)
+			{
+				$p->label = trans('sanatorium/inputs::groups/permissions.index');
+
+				$p->controller('Sanatorium\Inputs\Controllers\Admin\GroupsController', 'index, grid');
+			});
+
+			$g->permission('group.create', function($p)
+			{
+				$p->label = trans('sanatorium/inputs::groups/permissions.create');
+
+				$p->controller('Sanatorium\Inputs\Controllers\Admin\GroupsController', 'create, store');
+			});
+
+			$g->permission('group.edit', function($p)
+			{
+				$p->label = trans('sanatorium/inputs::groups/permissions.edit');
+
+				$p->controller('Sanatorium\Inputs\Controllers\Admin\GroupsController', 'edit, update');
+			});
+
+			$g->permission('group.delete', function($p)
+			{
+				$p->label = trans('sanatorium/inputs::groups/permissions.delete');
+
+				$p->controller('Sanatorium\Inputs\Controllers\Admin\GroupsController', 'delete');
+			});
+		});
+	},
 
     /*
     |--------------------------------------------------------------------------
@@ -287,14 +301,18 @@ return [
 
     'menus' => [
 
-        'admin' => [
-
-        ],
-
-        'main' => [
-
-        ],
-
-    ],
+		'admin' => [
+            [
+                'class' => 'fa fa-object-group',
+                'name' => 'Groups',
+                'uri' => 'inputs/groups',
+                'regex' => '/:admin\/inputs\/group/i',
+                'slug' => 'admin-sanatorium-inputs-group',
+            ],
+		],
+		'main' => [
+			
+		],
+	],
 
 ];

@@ -1,0 +1,13 @@
+<?php
+
+return [
+
+    'general' => [
+
+        'relation' => 'Relation',
+        'relation_help' => 'Related object',
+        'relation_placeholder' => 'Select relation...',
+
+    ]
+
+];
