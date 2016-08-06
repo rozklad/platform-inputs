@@ -2,7 +2,9 @@
 
 use Illuminate\Events\Dispatcher;
 use Sanatorium\Inputs\Models\Group;
+use Sanatorium\Inputs\Models\Relation;
 use Cartalyst\Support\Handlers\EventHandler as BaseEventHandler;
+use Platform\Attributes\Models\Attribute;
 
 class GroupEventHandler extends BaseEventHandler implements GroupEventHandlerInterface {
 
@@ -19,6 +21,11 @@ class GroupEventHandler extends BaseEventHandler implements GroupEventHandlerInt
 
 		$dispatcher->listen('sanatorium.inputs.group.deleted', __CLASS__.'@deleting');
 		$dispatcher->listen('sanatorium.inputs.group.deleted', __CLASS__.'@deleted');
+
+        $dispatcher->listen('platform.attribute.updating', __CLASS__.'@attributeUpdating');
+        $dispatcher->listen('platform.attribute.creating', __CLASS__.'@attributeCreating');
+        $dispatcher->listen('platform.attribute.created', __CLASS__.'@attributeCreated');
+        $dispatcher->listen('platform.attribute.deleted', __CLASS__.'@attributeDeleted');
 	}
 
 	/**
@@ -81,5 +88,100 @@ class GroupEventHandler extends BaseEventHandler implements GroupEventHandlerInt
 
 		$this->app['cache']->forget('sanatorium.inputs.group.'.$group->id);
 	}
+
+    /**
+     * @todo  move to it's own event handler (eq. Sanatorium\Inputs\Handlers\AttributeEventHandler)
+     * @param Attribute $attribute
+     * @param array     $data
+     */
+	public function attributeUpdating(Attribute $attribute, array $data)
+    {
+        dd($data);
+    }
+
+    /**
+     * @todo  move to it's own event handler (eq. Sanatorium\Inputs\Handlers\AttributeEventHandler)
+     * @param Attribute $attribute
+     * @param array     $data
+     */
+    public function attributeCreating(array $data)
+    {
+        file_put_contents($this->getTmpFilePath($data['slug']), json_encode($data));
+    }
+
+    /**
+     * @todo  move to it's own event handler (eq. Sanatorium\Inputs\Handlers\AttributeEventHandler)
+     * @param Attribute $attribute
+     * @param array     $data
+     */
+    public function attributeCreated(Attribute $attribute)
+    {
+        $tmp_file_path = $this->getTmpFilePath($attribute->slug);
+
+        if ( !file_exists($tmp_file_path) )
+            return true;
+
+        $data = file_get_contents(json_decode($tmp_file_path, true));
+
+        // Cleanup tmp file
+        unlink($tmp_file_path);
+
+        // Assign attribute to group
+        if ( isset($data['group']) )
+            $this->assignGroup($attribute, $data['group']);
+
+        // Assign relation to attribute
+        if ( isset($data['relation']) )
+            $this->assignRelation($attribute, $data['relation']);
+
+    }
+
+    public function attributeDeleted(Attribute $attribute)
+    {
+        $this->removeFromGroups($attribute);
+
+        $this->removeRelations($attribute);
+    }
+
+    protected function getTmpFilePath($slug = null)
+    {
+        return __DIR__ . '/../../../tmp/' . $slug . '.json';
+    }
+
+    protected function assignGroup(Attribute $attribute, $group_id)
+    {
+        $group = Group::find($group_id);
+
+        if ( $group )
+        {
+            $group->attributes()->attach($attribute);
+        }
+    }
+
+    protected function assignRelation(Attribute $attribute, $relation = null)
+    {
+        if ( empty($relation) )
+            return false;
+
+        Relation::create([
+            'attribute_id' => $attribute->id,
+            'relation' => $relation
+        ]);
+    }
+
+    protected function removeFromGroups(Attribute $attribute)
+    {
+        foreach( Group::whereHas('attributes', function($query) use ($attribute) {
+            $query->where('attribute_id', $attribute->id);
+        })->get() as $group)
+        {
+            $group->attributes()->detach($attribute->id);
+        }
+    }
+
+    protected function removeRelations(Attribute $attribute)
+    {
+        Relation::where('atrribute_id', $attribute->id)->delete();
+    }
 
 }

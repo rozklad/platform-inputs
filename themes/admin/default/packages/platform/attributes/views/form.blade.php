@@ -247,14 +247,41 @@
                                                         {{{ trans('sanatorium/inputs::model.general.relation') }}}
                                                     </label>
 
-                                                    <select name="options[relation]" class="form-control">
-                                                        <option value="">{{ trans('sanatorium/inputs::model.general.relation_placeholder') }}</option>
+                                                    <select name="relation" class="form-control">
+                                                        <option>{{ trans('sanatorium/inputs::model.general.relation_placeholder') }}</option>
                                                         @foreach( app('sanatorium.inputs.relations')->getRelations() as $key => $value )
                                                             <option value="{{ $key }}">{{ $value }}</option>
                                                         @endforeach
                                                     </select>
 
                                                     <span class="help-block">{{{ Alert::onForm('relation') }}}</span>
+
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="row">
+
+                                            <div class="col-md-12">
+
+                                                {{-- Group --}}
+                                                <div class="form-group{{ Alert::onForm('group', ' has-error') }}">
+
+                                                    <label for="description" class="control-label">
+                                                        <i class="fa fa-info-circle" data-toggle="popover" data-content="{{{ trans('sanatorium/inputs::model.general.group_help') }}}"></i>
+                                                        {{{ trans('sanatorium/inputs::model.general.group') }}}
+                                                    </label>
+
+                                                    <select name="group" class="form-control">
+                                                        <option>{{ trans('sanatorium/inputs::model.general.group_placeholder') }}</option>
+                                                        @foreach( \Sanatorium\Inputs\Models\Group::all() as $group )
+                                                            <option value="{{ $group->id }}">{{ $group->name }}</option>
+                                                        @endforeach
+                                                    </select>
+
+                                                    <span class="help-block">{{{ Alert::onForm('group') }}}</span>
 
                                                 </div>
 

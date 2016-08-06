@@ -8,6 +8,10 @@ return [
         'relation_help' => 'Related object',
         'relation_placeholder' => 'Select relation...',
 
+        'group' => 'Group',
+        'group_help' => 'Input group',
+        'group_placeholder' => 'Select input group...',
+
     ]
 
 ];

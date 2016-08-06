@@ -49,7 +49,7 @@ To register new extension, use:
 
     try
     {
-        // Register the attributes namespace
+        // Register new relation
         $this->app['sanatorium.inputs.relations']->registerRelation(
             'qualification', 'Sleighdogs\Qualifications\Models\Qualification'
         );

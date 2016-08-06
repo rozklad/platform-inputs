@@ -33,4 +33,9 @@ class Group extends Model implements EntityInterface {
 	 */
 	protected static $entityNamespace = 'sanatorium/inputs.group';
 
+    public function attributes()
+    {
+        return $this->belongsToMany('Platform\Attributes\Models\Attribute', 'attributes_inputgroups', 'inputgroup_id', 'attribute_id');
+    }
+
 }

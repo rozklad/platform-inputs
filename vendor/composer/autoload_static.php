@@ -21,6 +21,7 @@ class ComposerStaticInitc01d2ac0268d4efa8d09a78118709455
     );
 
     public static $classMap = array (
+        'CreateAttributeRelationsTable' => __DIR__ . '/../..' . '/database/migrations/2016_08_06_224510_create_attribute_relations_table.php',
         'CreateAttributesInputgroupsTable' => __DIR__ . '/../..' . '/database/migrations/2016_08_06_203039_create_attributes_inputgroups_table.php',
         'CreateGroupsTable' => __DIR__ . '/../..' . '/database/migrations/2016_08_06_191343_create_groups_table.php',
         'CreateMediaAssignTable' => __DIR__ . '/../..' . '/database/migrations/2015_09_22_201025_create_media_assign_table.php',

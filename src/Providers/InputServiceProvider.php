@@ -88,11 +88,7 @@ class InputServiceProvider extends ServiceProvider {
     {
         try
         {
-            // Register the attributes namespace
-            /*$this->app['sanatorium.inputs.relations']->registerRelation(
-                'qualification', 'Sleighdogs\Qualifications\Models\Qualification'
-            );*/
-
+            // Register the relations
             $this->app['sanatorium.inputs.relations']->registerRelation(
                 'page', 'Platform\Pages\Models\Page'
             );
