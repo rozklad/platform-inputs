@@ -107,8 +107,8 @@
       this.$preview          = $(this.$manager.data('preview'));
       this.$external         = $('[data-external-control="' + this.input_name + '"]');
       this.$previewContainer = $(this.$manager.data('preview-container'));
-      this.$previewTemplate  = $('#preview-template-' + this.input_name);
-      this.$btnTrigger       = $('.btn-trigger-' + this.input_name);
+      this.$previewTemplate  = $('#preview-template-' + this.input_name.replace('[]', ''));
+      this.$btnTrigger       = $('.btn-trigger-' + this.input_name.replace('[]', ''));
 
     },
 
