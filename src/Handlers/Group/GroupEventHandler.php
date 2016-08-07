@@ -154,21 +154,26 @@ class GroupEventHandler extends BaseEventHandler implements GroupEventHandlerInt
         return __DIR__ . '/../../../tmp/' . $slug . '.json';
     }
 
-    protected function assignGroup(Attribute $attribute, $group_id)
+    protected function assignGroup(Attribute $attribute, $group_ids)
     {
-        if ( is_array($group_id) ) {
-            foreach( $group_id as $single )
-            {
-                $this->assignGroup($single);
-            }
-        } else
-        {
+        if ( !is_array($group_ids) ) {
+            $group_ids = [$group_ids];
+        }
+
+        foreach( $group_ids as $group_id ) {
             $group = Group::find($group_id);
 
             if ( $group )
             {
                 $group->attributes()->sync([$attribute->id], false);
             }
+        }
+
+        // Detach from groups not listed and currently saved with attribute
+        foreach( Group::whereHas('attributes', function($query) use ($attribute) {
+            $query->where('attribute_id', $attribute->id);
+        })->whereNotIn('id', $group_ids)->get() as $group) {
+            $group->attributes()->detach($attribute->id);
         }
     }
 

@@ -18,6 +18,7 @@ class CreateGroupsTable extends Migration {
 			$table->string('name')->nullable();
 			$table->string('slug');
 			$table->integer('weight')->default('0');
+            $table->text('settings')->nullable();
 			$table->timestamps();
 		});
 	}

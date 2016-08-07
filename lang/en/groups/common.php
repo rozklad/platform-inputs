@@ -8,6 +8,7 @@ return [
 
 		'general'    => 'Group',
 		'attributes' => 'Attributes',
+        'builder'    => 'Builder',
 
 	],
 

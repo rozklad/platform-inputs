@@ -19,4 +19,6 @@ return [
 		'delete' => 'There was an issue deleting the group. Please try again.',
 	],
 
+    'no_inputs' => 'You have no attributes assigned to this group, please manage the attributes first',
+
 ];
