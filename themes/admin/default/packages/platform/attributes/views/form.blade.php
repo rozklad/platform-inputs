@@ -247,10 +247,17 @@
                                                         {{{ trans('sanatorium/inputs::model.general.relation') }}}
                                                     </label>
 
+                                                    <?php
+                                                    $selected_relation_slug = null;
+                                                    if ( $relation = Sanatorium\Inputs\Models\Relation::where('attribute_id', $attribute->id)->first() )
+                                                    {
+                                                        $selected_relation_slug = $relation->relation;
+                                                    }
+                                                    ?>
                                                     <select name="relation" class="form-control">
                                                         <option>{{ trans('sanatorium/inputs::model.general.relation_placeholder') }}</option>
                                                         @foreach( app('sanatorium.inputs.relations')->getRelations() as $key => $value )
-                                                            <option value="{{ $key }}">{{ $value }}</option>
+                                                            <option value="{{ $key }}" {{ $key == $selected_relation_slug ? 'selected' : '' }}>{{ $value }}</option>
                                                         @endforeach
                                                     </select>
 
@@ -274,10 +281,18 @@
                                                         {{{ trans('sanatorium/inputs::model.general.group') }}}
                                                     </label>
 
-                                                    <select name="group" class="form-control">
+                                                    <?php
+                                                    $selected_group_ids = [];
+                                                    foreach ( $group = Sanatorium\Inputs\Models\Group::whereHas('attributes', function($query) use ($attribute) {
+                                                        $query->where('attribute_id', $attribute->id);
+                                                    })->get() as $group) {
+                                                          $selected_group_ids[] = $group->id;
+                                                    }
+                                                    ?>
+                                                    <select name="group" class="form-control" multiple>
                                                         <option>{{ trans('sanatorium/inputs::model.general.group_placeholder') }}</option>
                                                         @foreach( \Sanatorium\Inputs\Models\Group::all() as $group )
-                                                            <option value="{{ $group->id }}">{{ $group->name }}</option>
+                                                            <option value="{{ $group->id }}" {{ in_array($group->id, $selected_group_ids) ? 'selected' : '' }}>{{ $group->name }}</option>
                                                         @endforeach
                                                     </select>
 

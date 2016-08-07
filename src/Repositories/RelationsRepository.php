@@ -26,4 +26,10 @@ class RelationsRepository implements RelationsRepositoryInterface {
         $this->relations[$key] = $relation;
     }
 
+    public function getRelation($key)
+    {
+        if ( isset($this->relations[$key]) )
+            return $this->relations[$key];
+    }
+
 }

@@ -96,7 +96,13 @@ class GroupEventHandler extends BaseEventHandler implements GroupEventHandlerInt
      */
 	public function attributeUpdating(Attribute $attribute, array $data)
     {
-        dd($data);
+        // Assign attribute to group
+        if ( isset($data['group']) )
+            $this->assignGroup($attribute, $data['group']);
+
+        // Assign relation to attribute
+        if ( isset($data['relation']) )
+            $this->assignRelation($attribute, $data['relation']);
     }
 
     /**
@@ -121,7 +127,7 @@ class GroupEventHandler extends BaseEventHandler implements GroupEventHandlerInt
         if ( !file_exists($tmp_file_path) )
             return true;
 
-        $data = file_get_contents(json_decode($tmp_file_path, true));
+        $data = json_decode(file_get_contents($tmp_file_path), true);
 
         // Cleanup tmp file
         unlink($tmp_file_path);
@@ -150,11 +156,19 @@ class GroupEventHandler extends BaseEventHandler implements GroupEventHandlerInt
 
     protected function assignGroup(Attribute $attribute, $group_id)
     {
-        $group = Group::find($group_id);
-
-        if ( $group )
+        if ( is_array($group_id) ) {
+            foreach( $group_id as $single )
+            {
+                $this->assignGroup($single);
+            }
+        } else
         {
-            $group->attributes()->attach($attribute);
+            $group = Group::find($group_id);
+
+            if ( $group )
+            {
+                $group->attributes()->sync([$attribute->id], false);
+            }
         }
     }
 
@@ -163,7 +177,7 @@ class GroupEventHandler extends BaseEventHandler implements GroupEventHandlerInt
         if ( empty($relation) )
             return false;
 
-        Relation::create([
+        Relation::firstOrCreate([
             'attribute_id' => $attribute->id,
             'relation' => $relation
         ]);
@@ -181,7 +195,7 @@ class GroupEventHandler extends BaseEventHandler implements GroupEventHandlerInt
 
     protected function removeRelations(Attribute $attribute)
     {
-        Relation::where('atrribute_id', $attribute->id)->delete();
+        Relation::where('attribute_id', $attribute->id)->delete();
     }
 
 }

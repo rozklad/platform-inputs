@@ -4,7 +4,34 @@
         {{{ $attribute->name }}}
     </label>
 
-    <input type="text" class="form-control" name="{{ $attribute->slug }}" id="{{ $attribute->slug }}" value="{{ $entity->{$attribute->slug} }}">
+    <?php
+
+    $relation = \Sanatorium\Inputs\Models\Relation::where('attribute_id', $attribute->id)->first();
+
+    $relatable_objects = [];
+
+    if ($relation) {
+
+        $relatable_class = app('sanatorium.inputs.relations')->getRelation($relation->relation);
+
+        $relatable_objects = $relatable_class::all()->toArray();
+
+    }
+
+    if ( !is_array($entity->{$attribute->slug}) ) {
+        $selected = [ $entity->{$attribute->slug} ];
+    } else {
+        $selected = $entity->{$attribute->slug};
+    }
+
+    ?>
+
+    {{-- @todo: make possible multiple --}}
+    <select class="form-control" name="{{ $attribute->slug }}" id="{{ $attribute->slug }}">
+    @foreach ( $relatable_objects as $relatable_object )
+        <option value="{{ $relatable_object['id'] }}" {{ in_array($relatable_object['id'], $selected) ? 'selected' : '' }}>{{ $relatable_object['name'] }}</option>
+    @endforeach
+    </select>
 
     <span class="help-block">{{{ Alert::onForm($attribute->slug) }}}</span>
 

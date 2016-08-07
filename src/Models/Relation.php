@@ -4,6 +4,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Relation extends Model {
 
+    /**
+     * {@inheritDoc}
+     */
+    protected $guarded = [
+        'id',
+    ];
 
     /**
      * {@inheritDoc}
