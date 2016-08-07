@@ -17,13 +17,26 @@
 
 namespace Sanatorium\Inputs\Types;
 
-use Platform\Attributes\Types\TypeInterface;
+use Cartalyst\Attributes\EntityInterface;
+use Platform\Attributes\Models\Attribute;
 
-class MediaType extends BaseType implements TypeInterface
+class MediaType extends BaseType
 {
     /**
      * {@inheritDoc}
      */
     protected $identifier = 'media';
-    
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getEntityFormHtml(Attribute $attribute, EntityInterface $entity)
+    {
+        $mode = 'multiple';
+        $filter = 'images';
+        $types = ['image/png', 'image/jpg', 'image/gif'];
+        $label = trans('sanatorium/inputs::types.media.select');
+        return view("sanatorium/inputs::types/media", compact('attribute', 'entity', 'mode', 'filter', 'types', 'label'));
+    }
+
 }

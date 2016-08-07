@@ -67,7 +67,7 @@ return [
     |
     */
 
-    'version' => '1.2.3',
+    'version' => '1.2.4',
 
     /*
     |--------------------------------------------------------------------------
@@ -148,6 +148,38 @@ return [
 
     'routes' => function(ExtensionInterface $extension, Application $app)
 	{
+        Route::group([
+            'prefix'    => 'inputs',
+            'namespace' => 'Sanatorium\Inputs\Controllers\Frontend',
+        ], function ()
+        {
+            Route::group([
+                'prefix' => 'media',
+            ], function ()
+            {
+                Route::get('/', ['as' => 'sanatorium.inputs.media.all', 'uses' => 'MediaController@getMedia']);
+                Route::any('upload', ['as' => 'sanatorium.inputs.media.upload', 'uses' => 'MediaController@upload']);
+                Route::get('{id}/{type}', ['as' => 'sanatorium.inputs.media.entity', 'uses' => 'MediaController@getMediaAssignedToEntity']);
+            });
+        });
+        Route::group([
+            'prefix' => admin_uri(),
+            'namespace' => 'Sanatorium\Inputs\Controllers\Admin',
+        ], function()
+        {
+            Route::group([
+                'prefix' => 'media',
+            ], function ()
+            {
+                Route::delete('{id}', ['as' => 'sanatorium.inputs.media.delete', 'uses' => 'MediaController@delete']);
+                //Route::get('files_list', ['as' => 'admin.media.files_list', 'uses' => 'MediaController@filesList']);
+                // Used by Imperavi redactor image media manager, overrides platform/media
+                Route::get('images_list', ['as' => 'admin.media.images_list', 'uses' => 'MediaController@imagesList']);
+                //Route::post('upload', ['as' => 'admin.media.upload', 'uses' => 'MediaController@upload']);
+                //Route::post('link_media', ['as' => 'admin.media.link_media', 'uses' => 'MediaController@linkMedia']);
+            });
+        });
+
 		Route::group([
 				'prefix'    => admin_uri().'/inputs/groups',
 				'namespace' => 'Sanatorium\Inputs\Controllers\Admin',

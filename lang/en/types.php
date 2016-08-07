@@ -35,6 +35,7 @@ return [
         'media_library' => 'Media Library',
         'media_details' => 'Media details',
         'search'        => 'Search',
+        'select'        => 'Select files',
 
         'upload' => [
             'select'  => 'Select Files',
