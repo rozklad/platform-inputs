@@ -122,7 +122,7 @@ class MediaController extends AdminController
 
         $transformer = function ($media) {
             return [
-                'thumb' => StorageUrl::url( \Sanatorium\Inputs\Models\Media::thumbnailPath($media, 300) ),
+                'thumb' => thumbnail_url($media, 300),
                 'image' => route('media.view', $media->image),
                 'title' => $media->name,
             ];
