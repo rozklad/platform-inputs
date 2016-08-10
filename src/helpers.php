@@ -15,15 +15,14 @@ if ( !function_exists('storage_url') )
         if ( is_numeric($media) )
         {
             $media = app('platform.media')->find($media);
-        } else if ( is_string($media) )
-        {
-            $media = app('platform.media')->where('path', $media)->first();
         }
 
         if ( !is_object($media) )
-            return null;
+            $path = $media;
+        else
+            $path = $media->path;
 
-        return StorageUrl::url($media->path);
+        return StorageUrl::url($path);
     }
 }
 
@@ -43,6 +42,17 @@ if ( !function_exists('thumbnail_url') )
 
         if ( $width != 'full' || $height != 'full' )
             $name = Str::slug(implode('-', [$width, $height ?: $width]));
+
+        if ( is_numeric($media) )
+        {
+            $media = app('platform.media')->find($media);
+        } else if ( is_string($media) )
+        {
+            $media = app('platform.media')->where('path', $media)->first();
+        }
+
+        if ( !is_object($media) )
+            return null;
 
         $extension = mime2Extension($media->mime);
 
