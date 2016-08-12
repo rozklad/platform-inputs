@@ -6,7 +6,7 @@
 
     <select class="form-control" name="{{ $attribute->slug }}" id="{{ $attribute->slug }}">
         @foreach( $countries as $country )
-            <option value="{{ $country->code }}" {{ $country->code == $entity->{$attribute->slug} ? 'selected' : '' }}>{{ $country->name }}</option>
+            <option value="{{ $country['code'] }}" {{ $country['code'] == $entity->{$attribute->slug} ? 'selected' : '' }}>{{ $country['name'] }}</option>
         @endforeach
     </select>
 
