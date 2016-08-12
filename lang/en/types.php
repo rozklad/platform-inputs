@@ -20,6 +20,7 @@ return [
         'phone'     => 'Phone',
         'url'       => 'URL',
         'email'     => 'E-mail',
+        'country'   => 'Country',
     ],
 
     'image' => [

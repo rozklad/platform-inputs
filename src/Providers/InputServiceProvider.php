@@ -56,6 +56,7 @@ class InputServiceProvider extends ServiceProvider {
             'url'               => new Types\UrlType,
             'email'             => new Types\EmailType,
             'relation'          => new Types\RelationType,
+            'country'           => new Types\CountryType,
         ];
 
         $manager = $this->app['platform.attributes.manager'];

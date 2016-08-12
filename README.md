@@ -10,6 +10,10 @@ Extended input types
 
 Pick category from tree (to be deprecated >> see Relation).
 
+#### Country
+
+Pick country from list.
+
 #### Date
 
 Date formatted input.
