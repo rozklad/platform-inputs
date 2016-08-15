@@ -351,6 +351,27 @@
 
 							</div>
 
+							<div class="row">
+								<div class="col-sm-6">
+									<label for="collapsible" class="control-label">
+										{{ trans('sanatorium/inputs::groups/model.general.collapsible') }}
+									</label>
+									<select name="collapsible" id="collapsible" class="form-control">
+										<option value="1" {{ $group->collapsible == 1 ? 'selected' : '' }}>{{ trans('common.yes') }}</option>
+										<option value="0" {{ $group->collapsible == 0 ? 'selected' : '' }}>{{ trans('common.no')  }}</option>
+									</select>
+								</div>
+								<div class="col-sm-6">
+									<label for="expanded" class="control-label">
+										{{ trans('sanatorium/inputs::groups/model.general.expanded') }}
+									</label>
+									<select name="expanded" id="expanded" class="form-control">
+										<option value="1" {{ $group->expanded == 1 ? 'selected' : '' }}>{{ trans('common.yes') }}</option>
+										<option value="0" {{ $group->expanded == 0 ? 'selected' : '' }}>{{ trans('common.no')  }}</option>
+									</select>
+								</div>
+							</div>
+
 							<div class="row hidden">
 
 								<div class="col-sm-6">

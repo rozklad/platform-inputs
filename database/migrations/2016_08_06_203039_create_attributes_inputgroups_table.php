@@ -17,6 +17,8 @@ class CreateAttributesInputgroupsTable extends Migration {
 			$table->increments('id');
 			$table->integer('attribute_id');
 			$table->integer('inputgroup_id');
+            $table->boolean('collapsible')->default(1);
+            $table->boolean('expanded')->default(1);
 			$table->timestamps();
 		});
 	}

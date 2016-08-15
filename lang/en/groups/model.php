@@ -12,6 +12,8 @@ return [
 		'name_help' => 'Enter the Name here',
 		'slug_help' => 'Enter the Slug here',
 		'weight_help' => 'Enter the Weight here',
+        'collapsible' => 'Collapsible',
+        'expanded' => 'Expanded'
 
 	],
 
