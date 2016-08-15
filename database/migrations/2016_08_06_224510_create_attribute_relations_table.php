@@ -17,6 +17,7 @@ class CreateAttributeRelationsTable extends Migration {
 			$table->increments('id');
 			$table->integer('attribute_id');
 			$table->string('relation');
+            $table->string('multiple')->nullable();
 			$table->timestamps();
 		});
 	}

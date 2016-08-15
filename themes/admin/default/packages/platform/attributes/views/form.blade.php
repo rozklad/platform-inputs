@@ -242,7 +242,7 @@
                                                 {{-- Relation --}}
                                                 <div class="form-group{{ Alert::onForm('relation', ' has-error') }}">
 
-                                                    <label for="description" class="control-label">
+                                                    <label for="relation" class="control-label">
                                                         <i class="fa fa-info-circle" data-toggle="popover" data-content="{{{ trans('sanatorium/inputs::model.general.relation_help') }}}"></i>
                                                         {{{ trans('sanatorium/inputs::model.general.relation') }}}
                                                     </label>
@@ -254,7 +254,7 @@
                                                         $selected_relation_slug = $relation->relation;
                                                     }
                                                     ?>
-                                                    <select name="relation" class="form-control">
+                                                    <select name="relation" class="form-control" id="relation">
                                                         <option>{{ trans('sanatorium/inputs::model.general.relation_placeholder') }}</option>
                                                         @foreach( app('sanatorium.inputs.relations')->getRelations() as $key => $value )
                                                             <option value="{{ $key }}" {{ $key == $selected_relation_slug ? 'selected' : '' }}>{{ $value }}</option>
@@ -262,6 +262,38 @@
                                                     </select>
 
                                                     <span class="help-block">{{{ Alert::onForm('relation') }}}</span>
+
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="row visible-relation {{ $attribute->type == 'relation' ? '' : 'hidden' }}">
+
+                                            <div class="col-md-12">
+
+                                                {{-- Multiple--}}
+                                                <div class="form-group{{ Alert::onForm('multiple', ' has-error') }}">
+
+                                                    <label for="multiple" class="control-label">
+                                                        <i class="fa fa-info-circle" data-toggle="popover" data-content="{{{ trans('sanatorium/inputs::model.general.multiple_help') }}}"></i>
+                                                        {{{ trans('sanatorium/inputs::model.general.multiple') }}}
+                                                    </label>
+
+                                                    <?php
+                                                    $selected_relation_slug = null;
+                                                    if ( $relation = Sanatorium\Inputs\Models\Relation::where('attribute_id', $attribute->id)->first() )
+                                                    {
+                                                        $selected_relation_slug = $relation->relation;
+                                                    }
+                                                    ?>
+                                                    <select name="multiple" class="form-control" id="multiple">
+                                                        <option value="0" {{ $relation->multiple ? '' : 'selected' }}>{{ trans('common.no') }}</option>
+                                                        <option value="1" {{ $relation->multiple ? 'selected' : '' }}>{{ trans('common.yes') }}</option>
+                                                    </select>
+
+                                                    <span class="help-block">{{{ Alert::onForm('multiple') }}}</span>
 
                                                 </div>
 

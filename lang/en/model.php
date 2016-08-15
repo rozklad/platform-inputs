@@ -12,6 +12,9 @@ return [
         'group_help' => 'Input group',
         'group_placeholder' => 'Select input group...',
 
+        'multiple' => 'Allow multiple?',
+        'multiple_help' => 'Allow multiple values selected',
+
     ]
 
 ];

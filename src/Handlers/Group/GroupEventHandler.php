@@ -182,10 +182,16 @@ class GroupEventHandler extends BaseEventHandler implements GroupEventHandlerInt
         if ( empty($relation) )
             return false;
 
-        Relation::firstOrCreate([
+        $relation = Relation::firstOrCreate([
             'attribute_id' => $attribute->id,
             'relation' => $relation
         ]);
+        
+        if ( request()->has('multiple') )
+        {
+            $relation->multiple = request()->get('multiple');
+            $relation->save();
+        }
     }
 
     protected function removeFromGroups(Attribute $attribute)
