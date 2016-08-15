@@ -287,11 +287,14 @@
                                                     {
                                                         $selected_relation_slug = $relation->relation;
                                                     }
+                                                    if ( $relation ) {
                                                     ?>
                                                     <select name="multiple" class="form-control" id="multiple">
                                                         <option value="0" {{ $relation->multiple ? '' : 'selected' }}>{{ trans('common.no') }}</option>
                                                         <option value="1" {{ $relation->multiple ? 'selected' : '' }}>{{ trans('common.yes') }}</option>
                                                     </select>
+
+                                                    <?php } ?>
 
                                                     <span class="help-block">{{{ Alert::onForm('multiple') }}}</span>
 
