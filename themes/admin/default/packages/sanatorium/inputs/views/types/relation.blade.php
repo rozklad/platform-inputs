@@ -18,19 +18,28 @@
 
     }
 
-    if ( !is_array($entity->{$attribute->slug}) ) {
-        $selected = [ $entity->{$attribute->slug} ];
-    } else {
-        $selected = $entity->{$attribute->slug};
-    }
 
     ?>
 
     <select class="form-control" name="{{ $attribute->slug }}{{ $relation->multiple ? '[]' : '' }}" id="{{ $attribute->slug }}" {{ $relation->multiple ? 'multiple' : '' }}>
-    @foreach ( $relatable_objects as $relatable_object )
-        <option value="{{ $relatable_object['id'] }}" {{ in_array($relatable_object['id'], $selected) ? 'selected' : '' }}>{{ $relatable_object['name'] }}</option>
-    @endforeach
+        @foreach ( $relatable_objects as $relatable_object )
+            <option value="{{ $relatable_object['id'] }}"
+                <?php
+                        if ( is_array($entity->{$attribute->slug}) ) {
+                            foreach( $entity->{$attribute->slug} as $option ) {
+                                if ( $relatable_object['id'] == $option ) {
+                                    echo 'selected';
+                                }
+                            }
+                        }
+                ?>
+            >
+                {{ $relatable_object['name'] }}
+            </option>
+        @endforeach
     </select>
+
+    <?php unset($selected_values); ?>
 
     <span class="help-block">{{{ Alert::onForm($attribute->slug) }}}</span>
 
