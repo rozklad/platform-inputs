@@ -26,8 +26,7 @@
 
     ?>
 
-    {{-- @todo: make possible multiple --}}
-    <select class="form-control" name="{{ $attribute->slug }}" id="{{ $attribute->slug }}">
+    <select class="form-control" name="{{ $attribute->slug }}{{ $relation->multiple ? '[]' : '' }}" id="{{ $attribute->slug }}" {{ $relation->multiple ? 'multiple' : '' }}>
     @foreach ( $relatable_objects as $relatable_object )
         <option value="{{ $relatable_object['id'] }}" {{ in_array($relatable_object['id'], $selected) ? 'selected' : '' }}>{{ $relatable_object['name'] }}</option>
     @endforeach

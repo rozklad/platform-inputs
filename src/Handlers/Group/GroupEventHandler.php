@@ -186,7 +186,7 @@ class GroupEventHandler extends BaseEventHandler implements GroupEventHandlerInt
             'attribute_id' => $attribute->id,
             'relation' => $relation
         ]);
-        
+
         if ( request()->has('multiple') )
         {
             $relation->multiple = request()->get('multiple');
