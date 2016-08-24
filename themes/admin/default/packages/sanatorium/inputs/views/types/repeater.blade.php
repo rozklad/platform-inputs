@@ -50,7 +50,7 @@
 
 		removeOption: function($this) {
 
-			$this.parents('.form-inline:first').remove();
+			$this.parents('.form-repeater:first').remove();
 		}
 
 	};
@@ -85,7 +85,7 @@
 
 				@foreach( $entity->{$attribute->slug} as $value )
 
-				<div class="form-inline">
+				<div class="form-inline form-repeater">
 					
 					<div class="form-group">
 
@@ -112,15 +112,19 @@
 		{{-- Content is empty, show empty form --}}
 		@if ( ! $entity->{$attribute->slug} ) 
 
-		<div class="form-inline">
+		<div class="form-group form-repeater">
 			
-			<div class="form-group">
+			<div class="input-group">
 
 				<input type="text" name="{{ $attribute->slug }}[]" class="form-control"  data-parsley-ui-enabled="false">
-				
-				<button class="btn btn-md btn-default" data-option-add><i class="fa fa-plus"></i></button>
 
-				<button class="btn btn-md btn-default" data-option-remove><i class="fa fa-trash-o"></i></button>
+				<span class="input-group-btn">
+					<button class="btn btn-md btn-default" data-option-add><i class="fa fa-plus"></i></button>
+				</span>
+
+				<span class="input-group-btn">
+					<button class="btn btn-md btn-default" data-option-remove><i class="fa fa-trash-o"></i></button>
+				</span>
 			
 			</div>
 
@@ -134,14 +138,19 @@
 
 <script type="text/template" data-option-template>
 
-	<div class="form-inline">
+	<div class="form-group form-repeater">
 
-		<div class="form-group">
+		<div class="input-group">
 
 			<input class="form-control" name="{{ $attribute->slug }}[]" type="text" data-parsley-ui-enabled="false">
 
-			<button class="btn btn-md btn-default" data-option-add><i class="fa fa-plus"></i></button>
-			<button class="btn btn-md btn-default" data-option-remove><i class="fa fa-trash-o"></i></button>
+			<span class="input-group-btn">
+				<button class="btn btn-md btn-default" data-option-add><i class="fa fa-plus"></i></button>
+			</span>
+
+			<span class="input-group-btn">
+				<button class="btn btn-md btn-default" data-option-remove><i class="fa fa-trash-o"></i></button>
+			</span>
 
 		</div>
 
