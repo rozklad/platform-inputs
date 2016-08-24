@@ -99,13 +99,15 @@
 							<button class="btn btn-md btn-default" data-option-remove><i class="fa fa-trash-o"></i></button>
 						</span>
 
-						<a href="{{ $value }}" class="btn btn-link btn-md" target="_blank" style="max-width:150px;">
-							{{ $value }}
-						</a>
-
 					</div>
 
 				</div>
+
+				<p class="hidden">
+					<a href="{{ $value }}" class="btn btn-link btn-md" target="_blank" style="max-width:150px;">
+						{{ $value }}
+					</a>
+				</p>
 
 				@endforeach
 
