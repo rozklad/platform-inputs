@@ -85,16 +85,20 @@
 
 				@foreach( $entity->{$attribute->slug} as $value )
 
-				<div class="form-inline form-repeater">
+				<div class="form-group form-repeater">
 					
-					<div class="form-group">
+					<div class="input-group">
 
 						<input type="text" name="{{ $attribute->slug }}[]" value="{{ $value }}" class="form-control"  data-parsley-ui-enabled="false">
-						
-						<button class="btn btn-md btn-default" data-option-add><i class="fa fa-plus"></i></button>
 
-						<button class="btn btn-md btn-default" data-option-remove><i class="fa fa-trash-o"></i></button>
-					
+						<span class="input-group-btn">
+							<button class="btn btn-md btn-default" data-option-add><i class="fa fa-plus"></i></button>
+						</span>
+
+						<span class="input-group-btn">
+							<button class="btn btn-md btn-default" data-option-remove><i class="fa fa-trash-o"></i></button>
+						</span>
+
 						<a href="{{ $value }}" class="btn btn-link btn-md" target="_blank" style="max-width:150px;">
 							{{ $value }}
 						</a>
