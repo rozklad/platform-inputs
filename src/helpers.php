@@ -94,3 +94,21 @@ if ( !function_exists('mime2Extension') )
         return $extension;
     }
 }
+
+if ( !function_exists('textUrls2Links') )
+{
+    function textUrls2Links($text) {
+
+        $reg_exUrl = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
+        preg_match_all($reg_exUrl, $text, $matches);
+        $usedPatterns = array();
+        foreach($matches[0] as $pattern){
+            if(!array_key_exists($pattern, $usedPatterns)) {
+                $usedPatterns[$pattern]=true;
+                $text = str_replace($pattern, "<a href=\"{$pattern}\" rel=\"nofollow\">{$pattern}</a> ", $text);
+            }
+        }
+        return $text;
+
+    }
+}
