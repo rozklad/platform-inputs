@@ -5,8 +5,8 @@ use Platform\Media\Repositories\MediaRepositoryInterface;
 use Filesystem;
 use Cartalyst\Filesystem\File;
 use Cache;
-use Platform\Media\Models\Media;
 use StorageUrl;
+use Sanatorium\Inputs\Models\Media;
 
 class MediaController extends Controller {
 
@@ -31,9 +31,7 @@ class MediaController extends Controller {
      */
     public function getMediaAll($orderBy = 'created_at', $orderWay = 'desc')
     {
-        $media = app('platform.media');
-
-        return $media->orderBy($orderBy, $orderWay)->get();
+        return Media::orderBy($orderBy, $orderWay)->select('path', 'id')->get();
     }
 
     /**
@@ -42,12 +40,12 @@ class MediaController extends Controller {
     public function getMedia($orderBy = 'created_at', $orderWay = 'desc')
     {
         return ( $this->fetch
-            ? $this->fetch( $this->media->orderBy($orderBy, $orderWay)->get() )
-            : $this->media->orderBy($orderBy, $orderWay)->get()
+            ? $this->fetch( Media::orderBy($orderBy, $orderWay)->select('path', 'id')->get() )
+            : Media::orderBy($orderBy, $orderWay)->select('path', 'id')->get()
         );
     }
 
-    public function fetch($media)
+    public function fetch($media, $with_tags = false)
     {
         switch ( get_class($media) ) {
 
@@ -56,6 +54,7 @@ class MediaController extends Controller {
                 break;
 
             case 'Platform\Media\Models\Media':
+            case 'Sanatorium\Inputs\Models\Media':
 
                 $media->public_url = storage_url($media->path);
                 $media->thumbnail_uri = thumbnail_url($media, 300);
@@ -66,7 +65,8 @@ class MediaController extends Controller {
                 $media->email_uri = route('admin.media.email', $media->id);
                 $media->download_uri = route('media.download', $media->path);
                 $media->view_uri = route('media.view', $media->path);
-                $media->tags = $media->tags;
+                if ( $with_tags )
+                    $media->tags = $media->tags;
 
                 return $media;
                 break;
@@ -81,6 +81,8 @@ class MediaController extends Controller {
         {
             $results[] = $this->fetch($medium);
         }
+
+        //return view('debug/media', compact('results'));
 
         return $results;
     }
