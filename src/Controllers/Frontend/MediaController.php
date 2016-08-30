@@ -31,7 +31,7 @@ class MediaController extends Controller {
      */
     public function getMediaAll($orderBy = 'created_at', $orderWay = 'desc')
     {
-        return Media::orderBy($orderBy, $orderWay)->select('path', 'id')->get();
+        return Media::orderBy($orderBy, $orderWay)->select('path', 'id', 'is_image', 'mime', 'width', 'height')->get();
     }
 
     /**
@@ -40,8 +40,8 @@ class MediaController extends Controller {
     public function getMedia($orderBy = 'created_at', $orderWay = 'desc')
     {
         return ( $this->fetch
-            ? $this->fetch( Media::orderBy($orderBy, $orderWay)->select('path', 'id')->get() )
-            : Media::orderBy($orderBy, $orderWay)->select('path', 'id')->get()
+            ? $this->fetch( Media::orderBy($orderBy, $orderWay)->select('path', 'id', 'is_image', 'mime', 'width', 'height')->get() )
+            : Media::orderBy($orderBy, $orderWay)->select('path', 'id', 'is_image', 'mime', 'width', 'height')->get()
         );
     }
 
