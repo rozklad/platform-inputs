@@ -31,6 +31,10 @@
                                     echo 'selected';
                                 }
                             }
+                        } elseif ( is_string($entity->{$attribute->slug}) ) {
+                            if ( $entity->{$attribute->slug} == $relatable_object['id'] ) {
+                                echo 'selected';
+                            }
                         }
                 ?>
             >
