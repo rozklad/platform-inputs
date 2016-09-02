@@ -26,6 +26,12 @@ class InputServiceProvider extends ServiceProvider {
         // Register default relations
         $this->registerRelations();
 
+        // Register @live widget
+        $this->registerBladeLiveWidget();
+
+        // Config and other resources
+        $this->prepareResources();
+
 	}
 
 	/**
@@ -57,6 +63,7 @@ class InputServiceProvider extends ServiceProvider {
             'email'             => new Types\EmailType,
             'relation'          => new Types\RelationType,
             'country'           => new Types\CountryType,
+            'avatar'            => new Types\AvatarType,
         ];
 
         $manager = $this->app['platform.attributes.manager'];
@@ -98,6 +105,38 @@ class InputServiceProvider extends ServiceProvider {
         {
             // sanatorium/inputs is not installed or does not support relations
         }
+    }
+
+    /**
+     * Register the Blade @live widget.
+     *
+     * @return void
+     */
+    public function registerBladeLiveWidget()
+    {
+        $this->app['blade.compiler']->directive('live', function ($value) {
+            return "<?php echo Widget::make('sanatorium/inputs::live.make', array$value); ?>";
+        });
+
+        $this->app['blade.compiler']->directive('live_custom', function ($value) {
+            return "<?php echo Widget::make('sanatorium/inputs::live.custom', array$value); ?>";
+        });
+    }
+
+    /**
+     * Prepare the package resources.
+     *
+     * @return void
+     */
+    protected function prepareResources()
+    {
+        $config = realpath(__DIR__.'/../../config/config.php');
+
+        $this->mergeConfigFrom($config, 'sanatorium-inputs');
+
+        $this->publishes([
+            $config => config_path('sanatorium-inputs.php'),
+        ], 'config');
     }
 
 }

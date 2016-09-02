@@ -80,4 +80,11 @@ return [
         ],
     ],
 
+    // Legacy values, delete when getting rid of dropzone
+    'file' => [
+        'select' => 'Select files',
+        'allowed' => 'Allowed file types',
+        'click_upload' => 'Click to upload',
+    ],
+
 ];

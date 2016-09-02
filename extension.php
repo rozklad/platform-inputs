@@ -67,7 +67,7 @@ return [
     |
     */
 
-    'version' => '3.0.5',
+    'version' => '3.1.0',
 
     /*
     |--------------------------------------------------------------------------
@@ -161,6 +161,16 @@ return [
                 Route::any('upload', ['as' => 'sanatorium.inputs.media.upload', 'uses' => 'MediaController@upload']);
                 Route::get('{id}/{type}', ['as' => 'sanatorium.inputs.media.entity', 'uses' => 'MediaController@getMediaAssignedToEntity']);
             });
+
+            Route::post('dropzone', ['as' => 'sanatorium.inputs.dropzone.upload', 'uses' => 'DropzoneController@upload']);
+            Route::post('dropzone/single', ['as' => 'sanatorium.inputs.dropzone.upload.single', 'uses' => 'DropzoneController@single']);
+            Route::post('dropzone/avatar', ['as' => 'sanatorium.inputs.dropzone.upload.avatar', 'uses' => 'DropzoneController@avatar']);
+            Route::post('dropzone/cover', ['as' => 'sanatorium.inputs.dropzone.cover', 'uses' => 'DropzoneController@cover']);
+            Route::delete('dropzone/delete', ['as' => 'sanatorium.inputs.dropzone.delete', 'uses' => 'DropzoneController@delete']);
+
+            Route::get('media/options/{only_images}', ['as' => 'sanatorium.inputs.media.options', 'uses' => 'DropzoneController@options']);
+
+            Route::post('live/edit', ['as' => 'sanatorium.inputs.live.edit', 'uses' => 'LiveController@edit']);
         });
         Route::group([
             'prefix' => admin_uri(),
@@ -206,6 +216,24 @@ return [
 		{
 			Route::get('/', ['as' => 'sanatorium.inputs.groups.index', 'uses' => 'GroupsController@index']);
 		});
+
+        Route::get('/show/media/{path}', ['as' => 'sanatorium.inputs.show.media', 'uses' => function($path){
+
+            // Only for local content
+            $path = storage_path('files/'.$path);
+
+            if ( !File::exists($path) )
+                abort(404);
+
+            $file = File::get($path);
+            $type = File::mimeType($path);
+
+            $response = Response::make($file, 200);
+            $response->header("Content-Type", $type);
+
+            return $response;
+
+        }])->where('path', '.*');
 	},
 
     /*
