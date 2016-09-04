@@ -21,6 +21,7 @@ return [
         'url'       => 'URL',
         'email'     => 'E-mail',
         'country'   => 'Country',
+        'avatar'    => 'Avatar',
     ],
 
     'image' => [
@@ -78,6 +79,13 @@ return [
             'email'             => 'Email',
             'copy_to_clipboard' => 'Copy to clipboard',
         ],
+    ],
+
+    'settings' => [
+
+        'min' => 'Minimum',
+        'max' => 'Maximum',
+
     ],
 
     // Legacy values, delete when getting rid of dropzone

@@ -67,7 +67,7 @@ return [
     |
     */
 
-    'version' => '3.1.0',
+    'version' => '3.2.0',
 
     /*
     |--------------------------------------------------------------------------
@@ -177,6 +177,8 @@ return [
             'namespace' => 'Sanatorium\Inputs\Controllers\Admin',
         ], function()
         {
+            Route::get('inputs/attributes/settings/{type?}', ['as' => 'sanatorium.inputs.attributes.settings', 'uses' => 'AttributesController@settings']);
+
             Route::group([
                 'prefix' => 'media',
             ], function ()

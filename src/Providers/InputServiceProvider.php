@@ -39,7 +39,8 @@ class InputServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-
+        // Override the original attributes the data handler
+        $this->app->bind('platform.attributes.handler.data', 'Sanatorium\Inputs\Handlers\Attributes\AttributesDataHandler');
 	}
 
 	public function registerTypes()

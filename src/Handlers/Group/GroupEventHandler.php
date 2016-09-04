@@ -89,12 +89,7 @@ class GroupEventHandler extends BaseEventHandler implements GroupEventHandlerInt
 		$this->app['cache']->forget('sanatorium.inputs.group.'.$group->id);
 	}
 
-    /**
-     * @todo  move to it's own event handler (eq. Sanatorium\Inputs\Handlers\AttributeEventHandler)
-     * @param Attribute $attribute
-     * @param array     $data
-     */
-	public function attributeUpdating(Attribute $attribute, array $data)
+	protected function attributeConnectedPreferences(Attribute $attribute, array $data)
     {
         // Assign attribute to group
         if ( isset($data['group']) )
@@ -103,6 +98,21 @@ class GroupEventHandler extends BaseEventHandler implements GroupEventHandlerInt
         // Assign relation to attribute
         if ( isset($data['relation']) )
             $this->assignRelation($attribute, $data['relation']);
+
+        // Assign attribute settings
+        if ( isset($data['settings']) )
+            $this->assignSettings($attribute, $data['settings']);
+    }
+
+    /**
+     * @todo  move to it's own event handler (eq. Sanatorium\Inputs\Handlers\AttributeEventHandler)
+     * @param Attribute $attribute
+     * @param array     $data
+     */
+	public function attributeUpdating(Attribute $attribute, array $data)
+    {
+        // Groups, relations, settings
+        $this->attributeConnectedPreferences($attribute, $data);
     }
 
     /**
@@ -132,13 +142,8 @@ class GroupEventHandler extends BaseEventHandler implements GroupEventHandlerInt
         // Cleanup tmp file
         unlink($tmp_file_path);
 
-        // Assign attribute to group
-        if ( isset($data['group']) )
-            $this->assignGroup($attribute, $data['group']);
-
-        // Assign relation to attribute
-        if ( isset($data['relation']) )
-            $this->assignRelation($attribute, $data['relation']);
+        // Groups, relations, settings
+        $this->attributeConnectedPreferences($attribute, $data);
 
     }
 
@@ -192,6 +197,20 @@ class GroupEventHandler extends BaseEventHandler implements GroupEventHandlerInt
             $relation->multiple = request()->get('multiple');
             $relation->save();
         }
+    }
+
+    protected function assignSettings(Attribute $attribute, $settings = [])
+    {
+        if ( empty($settings) )
+            return false;
+
+        $setting = \Sanatorium\Inputs\Models\AttributeSettings::firstOrCreate([
+            'attribute_id' => $attribute->id
+        ]);
+
+        $setting->update([
+            'settings' => json_encode($settings)
+        ]);
     }
 
     protected function removeFromGroups(Attribute $attribute)

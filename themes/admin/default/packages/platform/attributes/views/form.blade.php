@@ -16,6 +16,7 @@
 {{ Asset::queue('underscore', 'underscore/js/underscore.js', 'jquery') }}
 {{ Asset::queue('sortable', 'platform/attributes::js/jquery.sortable.js', 'jquery') }}
 {{ Asset::queue('form', 'platform/attributes::js/form.js', [ 'platform', 'sortable', 'selectize', 'underscore', ]) }}
+{{ Asset::queue('parsley-comparison', 'sanatorium/inputs::parsley/comparison.js', ['jquery', 'validate']) }}
 
 {{-- Inline styles --}}
 @section('styles')
@@ -28,15 +29,61 @@
     <script type="text/javascript">
         Extension.Form.setOptions({!! json_encode($options) !!});
 
-        $(function(){
-           $('select[name="type"]').change(function(event){
+        function showHideByType() {
+
+            $('select[name="type"]').change(function(event){
                 var value = $(this).val();
-               if ( value == 'relation' ) {
-                   $('.visible-relation').removeClass('hidden');
-               } else {
-                   $('.visible-relation').addClass('hidden');
-               }
-           });
+
+                showHideByTypeSet(value);
+
+            });
+
+            showHideByTypeSet($('select[name="type"]').val());
+
+        }
+
+        function showHideByTypeSet(value) {
+            $('[data-type-visible]').addClass('hidden').filter('.visible-' + value).removeClass('hidden');
+        }
+
+        function showTypeSettings() {
+
+            $('select[name="type"]').change(function(event){
+                var value = $(this).val();
+
+                showTypeSettingsSet(value);
+
+            });
+
+            showTypeSettingsSet( $('select[name="type"]').val() );
+
+        }
+
+        function showTypeSettingsSet(value) {
+
+            $.ajax({
+                type: 'GET',
+                url: '{!! route('sanatorium.inputs.attributes.settings') !!}/' + value,
+                data: {id: {{ $attribute->exists ? $attribute->id : 0 }}, html: true, values: {!! json_encode($attribute->settings) !!} },
+                cache: false
+            }).success(function(data){
+
+                $('#type-settings').html(data);
+
+                $('#attributes-form').parsley(window.ParsleyConfig).isValid();
+
+            }).error(function(data){
+
+
+
+            });
+
+        }
+
+        $(function(){
+            showHideByType();
+
+            showTypeSettings();
         });
     </script>
 @stop
@@ -269,7 +316,7 @@
 
                                         </div>
 
-                                        <div class="row visible-relation {{ $attribute->type == 'relation' ? '' : 'hidden' }}">
+                                        <div class="row visible-relation {{ $attribute->type == 'relation' ? '' : 'hidden' }}" data-type-visible>
 
                                             <div class="col-md-12">
 
@@ -287,14 +334,11 @@
                                                     {
                                                         $selected_relation_slug = $relation->relation;
                                                     }
-                                                    if ( $relation ) {
                                                     ?>
                                                     <select name="multiple" class="form-control" id="multiple">
-                                                        <option value="0" {{ $relation->multiple ? '' : 'selected' }}>{{ trans('common.no') }}</option>
-                                                        <option value="1" {{ $relation->multiple ? 'selected' : '' }}>{{ trans('common.yes') }}</option>
+                                                        <option value="0" {{ is_object($relation) ? $relation->multiple ? '' : 'selected' : '' }}>{{ trans('common.no') }}</option>
+                                                        <option value="1" {{ is_object($relation) ? $relation->multiple ? 'selected' : '' : '' }}>{{ trans('common.yes') }}</option>
                                                     </select>
-
-                                                    <?php } ?>
 
                                                     <span class="help-block">{{{ Alert::onForm('multiple') }}}</span>
 
@@ -336,6 +380,10 @@
                                                 </div>
 
                                             </div>
+
+                                        </div>
+
+                                        <div id="type-settings">
 
                                         </div>
 

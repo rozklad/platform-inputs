@@ -102,12 +102,31 @@ WYSIWYG editor input field.
 
         namespace Sanatorium\Inputs\Types;
 
-        class DateType extends BaseType
+        class ScaleType extends BaseType
         {
+        
+            public $settings = [
+        
+                'min' => [
+                    'name'      => 'sanatorium/inputs::types.settings.min',
+                    'default'   => 0,
+                    'validation'=> 'numeric|max:max',
+                    'type'      => 'number'
+                ],
+        
+                'max' => [
+                    'name'      => 'sanatorium/inputs::types.settings.max',
+                    'default'   => 100,
+                    'validation'=> 'numeric|min:min',
+                    'type'      => 'number',
+                ]
+        
+            ];
+            
             /**
              * {@inheritDoc}
              */
-            protected $identifier = 'date';
+            protected $identifier = 'scale';
 
         }
 
@@ -115,10 +134,10 @@ WYSIWYG editor input field.
 
         $types = [
           ...
-          'date'		 	=> new Types\DateType,
+          'date'		 	=> new Types\ScaleType,
         ];
 
-3. Create templates to display the custom type on frontend and backend in sanatorium/inputs::types/{typeidentifider} theme path. (For example: /themes/admin/default/packages/sanatorium/input/views/types/date.blade.php and /themes/frontend/default/packages/sanatorium/input/views/types/date.blade.php)
+3. Create templates to display the custom type on frontend and backend in sanatorium/inputs::types/{typeidentifider} theme path. (For example: /themes/admin/default/packages/sanatorium/input/views/types/scale.blade.php and /themes/frontend/default/packages/sanatorium/input/views/types/scale.blade.php)
 
 ### Widgets
 
