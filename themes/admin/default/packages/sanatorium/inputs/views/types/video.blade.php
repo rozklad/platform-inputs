@@ -6,7 +6,7 @@
 		<i class="fa fa-info-circle" data-toggle="popover" data-content="{{ $attribute->description }}"></i>
 		@endif
 
-		{{{ $attribute->name }}}
+		{{{ transattr($attribute->slug, $attribute->name) }}}
 
 	</label>
 

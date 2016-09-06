@@ -112,3 +112,23 @@ if ( !function_exists('textUrls2Links') )
 
     }
 }
+
+
+if (! function_exists('transattr')) {
+    /**
+     * Temporary function
+     * @todo replace with some conceptual translation
+     * @param $slug
+     * @return mixed
+     */
+    function transattr($slug, $fallback = null)
+    {
+        $lang_slug = 'attributes.'.$slug;
+        $value = trans($lang_slug);
+
+        if ( $value == $lang_slug && $fallback != null )
+            return $fallback;
+
+        return $value;
+    }
+}

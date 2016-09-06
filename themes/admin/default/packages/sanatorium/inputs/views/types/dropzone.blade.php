@@ -74,7 +74,7 @@ $(function(){
 		<i class="fa fa-info-circle" data-toggle="popover" data-content="{{ $attribute->description }}"></i>
 		@endif
 
-		{{{ $attribute->name }}} ({{{ $attribute->slug }}}) 
+        {{{ transattr($attribute->slug, $attribute->name) }}} ({{{ $attribute->slug }}})
 
 	</label>
     <div class="dropzone dropzone-previews-{{{ $attribute->slug }}}" id="attribute-dropzone-{{{ $attribute->slug }}}" style="padding-bottom:300px;">

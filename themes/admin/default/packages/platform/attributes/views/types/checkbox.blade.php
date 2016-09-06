@@ -13,10 +13,9 @@
 	<input type="hidden" name="{{ $attribute->slug }}" value="0">
 
 	@foreach ($attribute->options as $key => $value)
-	<div>
-		<input type="checkbox" data-init-plugin="switchery" id="option-{{ $attribute->slug }}-{{ $key }}" name="{{ $attribute->slug }}[]" value="{{ $key }}"{{ in_array($key, $entity->exists ? (is_array($entity->{$attribute->slug}) ? $entity->{$attribute->slug} : array()) : array()) ? ' checked="checked"' : null }}>
-		<label for="option-{{ $attribute->slug }}-{{ $key }}">
-			{{ $value }}
+	<div class="checkbox">
+		<label class="checkbox">
+			<input type="checkbox" name="{{ $attribute->slug }}[]" value="{{ $key }}"{{ in_array($key, $entity->exists ? (is_array($entity->{$attribute->slug}) ? $entity->{$attribute->slug} : array()) : array()) ? ' checked="checked"' : null }}> {{ $value }}
 		</label>
 	</div>
 	@endforeach

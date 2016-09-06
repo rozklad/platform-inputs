@@ -2,7 +2,7 @@
 <div class="form-group{{ Alert::onForm($attribute->slug, ' has-error') }}">
 
     <label for="{{ $attribute->slug . $rand }}" class="control-label">
-        {{{ $attribute->name }}}
+        {{{ transattr($attribute->slug, $attribute->name) }}}
     </label>
 
     <div class="row">
