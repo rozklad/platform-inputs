@@ -60,7 +60,7 @@
         }
 
         function showTypeSettingsSet(value) {
-
+            console.log(value);
             $.ajax({
                 type: 'GET',
                 url: '{!! route('sanatorium.inputs.attributes.settings') !!}/' + value,

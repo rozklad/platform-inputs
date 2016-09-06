@@ -67,7 +67,7 @@ return [
     |
     */
 
-    'version' => '3.2.0',
+    'version' => '3.2.1',
 
     /*
     |--------------------------------------------------------------------------
@@ -128,6 +128,7 @@ return [
 
 		'Sanatorium\Inputs\Providers\InputServiceProvider',
 		'Sanatorium\Inputs\Providers\GroupServiceProvider',
+		'Sanatorium\Inputs\Providers\FormServiceProvider',
 
 	],
 
@@ -148,7 +149,7 @@ return [
 
     'routes' => function(ExtensionInterface $extension, Application $app)
 	{
-        Route::group([
+		Route::group([
             'prefix'    => 'inputs',
             'namespace' => 'Sanatorium\Inputs\Controllers\Frontend',
         ], function ()
@@ -236,6 +237,33 @@ return [
             return $response;
 
         }])->where('path', '.*');
+
+					Route::group([
+				'prefix'    => admin_uri().'/inputs/forms',
+				'namespace' => 'Sanatorium\Inputs\Controllers\Admin',
+			], function()
+			{
+				Route::get('/' , ['as' => 'admin.sanatorium.inputs.forms.all', 'uses' => 'FormsController@index']);
+				Route::post('/', ['as' => 'admin.sanatorium.inputs.forms.all', 'uses' => 'FormsController@executeAction']);
+
+				Route::get('grid', ['as' => 'admin.sanatorium.inputs.forms.grid', 'uses' => 'FormsController@grid']);
+
+				Route::get('create' , ['as' => 'admin.sanatorium.inputs.forms.create', 'uses' => 'FormsController@create']);
+				Route::post('create', ['as' => 'admin.sanatorium.inputs.forms.create', 'uses' => 'FormsController@store']);
+
+				Route::get('{id}'   , ['as' => 'admin.sanatorium.inputs.forms.edit'  , 'uses' => 'FormsController@edit']);
+				Route::post('{id}'  , ['as' => 'admin.sanatorium.inputs.forms.edit'  , 'uses' => 'FormsController@update']);
+
+				Route::delete('{id}', ['as' => 'admin.sanatorium.inputs.forms.delete', 'uses' => 'FormsController@delete']);
+			});
+
+		Route::group([
+			'prefix'    => 'inputs/forms',
+			'namespace' => 'Sanatorium\Inputs\Controllers\Frontend',
+		], function()
+		{
+			Route::get('/', ['as' => 'sanatorium.inputs.forms.index', 'uses' => 'FormsController@index']);
+		});
 	},
 
     /*
@@ -309,6 +337,39 @@ return [
 				$p->controller('Sanatorium\Inputs\Controllers\Admin\GroupsController', 'delete');
 			});
 		});
+
+		$permissions->group('form', function($g)
+		{
+			$g->name = 'Forms';
+
+			$g->permission('form.index', function($p)
+			{
+				$p->label = trans('sanatorium/inputs::forms/permissions.index');
+
+				$p->controller('Sanatorium\Inputs\Controllers\Admin\FormsController', 'index, grid');
+			});
+
+			$g->permission('form.create', function($p)
+			{
+				$p->label = trans('sanatorium/inputs::forms/permissions.create');
+
+				$p->controller('Sanatorium\Inputs\Controllers\Admin\FormsController', 'create, store');
+			});
+
+			$g->permission('form.edit', function($p)
+			{
+				$p->label = trans('sanatorium/inputs::forms/permissions.edit');
+
+				$p->controller('Sanatorium\Inputs\Controllers\Admin\FormsController', 'edit, update');
+			});
+
+			$g->permission('form.delete', function($p)
+			{
+				$p->label = trans('sanatorium/inputs::forms/permissions.delete');
+
+				$p->controller('Sanatorium\Inputs\Controllers\Admin\FormsController', 'delete');
+			});
+		});
 	},
 
     /*
@@ -364,13 +425,22 @@ return [
     'menus' => [
 
 		'admin' => [
-            [
-                'class' => 'fa fa-object-group',
-                'name' => 'Groups',
-                'uri' => 'inputs/groups',
-                'regex' => '/:admin\/inputs\/group/i',
-                'slug' => 'admin-sanatorium-inputs-group',
-            ],
+			[
+				'class' => 'fa fa-object-group',
+				'name' => 'Groups',
+				'uri' => 'inputs/groups',
+				'regex' => '/:admin\/inputs\/group/i',
+				'slug' => 'admin-sanatorium-inputs-group',
+				'children' => [
+					[
+						'class' => 'fa fa-circle-o',
+						'name' => 'Forms',
+						'uri' => 'inputs/forms',
+						'regex' => '/:admin\/inputs\/form/i',
+						'slug' => 'admin-sanatorium-inputs-form',
+					],
+				],
+			],
 		],
 		'main' => [
 			
