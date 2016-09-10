@@ -32,7 +32,11 @@
 
     // @TODO: move to options
     $loadable     : null,
-    currentData   : null,
+    currentData   : {
+      media: [],
+      count: 0,
+      all  : [],
+    },
     sort          : 'created_at',
     filters       : {
       all      : [],
@@ -45,6 +49,7 @@
     $manager      : null,
     $input        : null,
     loaded        : false,
+    page          : 0,
     selected      : [],
     $statusbar    : null,
     typingTimer   : null,
@@ -91,6 +96,7 @@
       this.$filters          = this.$manager.find('[data-media-filter]');
       this.$dropzone         = this.$manager.find('[data-media-dropzone]');
       this.$sidebar          = this.$manager.find('.media-manager-sidebar');
+      this.$browser          = this.$manager.find('.media-manager-browser');
       this.template          = this.$manager.data('media-preview-template');
       this.$search           = $(this.$manager.data('search'));
       this.mode              = ( typeof this.$manager.data('mode') !== 'undefined' ? this.$manager.data('mode') : this.mode );
@@ -139,6 +145,20 @@
       this.activateDnd();
 
       this.activateExternal();
+
+      this.activateScrollListener();
+
+    },
+
+    activateScrollListener: function() {
+
+      var self = this;
+
+     self.$browser.scroll(function() {
+        if( self.$browser.scrollTop() > $(document).height() - self.$browser.height() ) {
+          self.loadLists();
+        }
+      });
 
     },
 
@@ -445,6 +465,11 @@
 
       var self = this;
 
+      if ( self.loading )
+        return true;
+
+      self.loading = true;
+
       this.$loadable.each(function () {
 
         self.$el = $(this);
@@ -452,19 +477,22 @@
         var url = self.$el.data('media-load');
 
         $.ajax({
-          type: 'GET',
-          url : url
+          type  : 'GET',
+          url   : url,
+          data  : {page: self.page}
         }).success(function (data) {
 
           self.currentData = {
-            media: data,
-            count: data.length,
-            all  : data,
+            media: self.currentData.media.concat(data),
+            count: self.currentData.count + data.length,
+            all  : self.currentData.all.concat(data),
           };
 
           self.showContents();
 
           self.loaded = true;
+          self.loading = false;
+          self.page++;
 
         });
 

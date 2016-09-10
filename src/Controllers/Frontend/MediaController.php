@@ -29,23 +29,50 @@ class MediaController extends Controller {
      * Static approach
      * @return mixed
      */
-    public function getMediaAll($orderBy = 'created_at', $orderWay = 'desc')
+    public function getMediaAll($orderBy = 'created_at', $orderWay = 'desc', $take = 40)
     {
-        return Media::orderBy($orderBy, $orderWay)->select('path', 'id', 'is_image', 'mime', 'width', 'height', 'created_at', 'updated_at', 'size', 'private')->get();
+        if ( request()->has('page') )
+        {
+            $skip = (request()->get('page') - 1) * $take;
+        } else {
+            $skip = 0;
+        }
+
+        return Media::orderBy($orderBy, $orderWay)
+            ->select('name', 'path', 'id', 'is_image', 'mime', 'width', 'height', 'created_at', 'updated_at', 'size', 'private')
+            ->skip(0)
+            ->take($take)
+            ->get();
     }
 
     /**
      * Returns all media available in the system
      */
-    public function getMedia($orderBy = 'created_at', $orderWay = 'desc')
+    public function getMedia($orderBy = 'created_at', $orderWay = 'desc', $take = 40)
     {
+        if ( request()->has('page') )
+        {
+            $skip = (request()->get('page') - 1) * $take;
+        } else {
+            $skip = 0;
+        }
+
         return ( $this->fetch
-            ? $this->fetch( Media::orderBy($orderBy, $orderWay)->select('path', 'id', 'is_image', 'mime', 'width', 'height', 'created_at', 'updated_at', 'size', 'private')->get() )
-            : Media::orderBy($orderBy, $orderWay)->select('path', 'id', 'is_image', 'mime', 'width', 'height', 'created_at', 'updated_at', 'size', 'private')->get()
+            ? $this->fetch( Media::orderBy($orderBy, $orderWay)
+                ->select('name', 'path', 'id', 'is_image', 'mime', 'width', 'height', 'created_at', 'updated_at', 'size', 'private')
+                ->skip($skip)
+                ->take($take)
+                ->get()
+            )
+            : Media::orderBy($orderBy, $orderWay)
+                ->select('name', 'path', 'id', 'is_image', 'mime', 'width', 'height', 'created_at', 'updated_at', 'size', 'private')
+                ->skip($skip)
+                ->take($take)
+                ->get()
         );
     }
 
-    public function fetch($media, $with_tags = false)
+    public function fetch($media, $with_tags = true)
     {
         switch ( get_class($media) ) {
 
