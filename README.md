@@ -77,6 +77,10 @@ Multiple input values (to be extended).
 
 One or multiple (allowOptions) checkboxes with "switchery look".
 
+#### Tags
+
+Multiselect which allows user's with permissions to add new values.
+
 #### Truefalse
 
 Single true/false value.
@@ -153,6 +157,8 @@ Widget to show media input types
 
 ## Changelog
 
+- 3
+- 3.0.0 - 2016-08-31 - Supports Platform v5.0
 - 1.2.0 - 2016-08-06 - Added relation, url, phone, email, supports grouping
 - 0.1.8 - 2016-05-16 - Basic readme file
 
