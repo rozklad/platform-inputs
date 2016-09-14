@@ -22,6 +22,7 @@ return [
         'email'     => 'E-mail',
         'country'   => 'Country',
         'avatar'    => 'Avatar',
+        'tags'      => 'Tags',
     ],
 
     'image' => [
@@ -85,6 +86,12 @@ return [
 
         'min' => 'Minimum',
         'max' => 'Maximum',
+
+    ],
+
+    'tags' => [
+
+      'create_value' => 'Allow value creation'
 
     ],
 

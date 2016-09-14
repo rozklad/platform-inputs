@@ -65,6 +65,7 @@ class InputServiceProvider extends ServiceProvider {
             'relation'          => new Types\RelationType,
             'country'           => new Types\CountryType,
             'avatar'            => new Types\AvatarType,
+            'tags'              => new Types\TagsType,
         ];
 
         $manager = $this->app['platform.attributes.manager'];

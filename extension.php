@@ -305,6 +305,16 @@ return [
 
     'permissions' => function(Permissions $permissions)
 	{
+        $permissions->group('inputs', function($g)
+        {
+            $g->name = 'Inputs';
+
+            $g->permission('inputs.tags.create', function ($p)
+            {
+                $p->label = trans('sanatorium/inputs::types.tags.create_value');
+            });
+        });
+
 		$permissions->group('group', function($g)
 		{
 			$g->name = 'Groups';
