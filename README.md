@@ -157,7 +157,7 @@ Widget to show media input types
 
 ## Changelog
 
-- 3
+- 4.0.0 - 2016-09-15 - Tags field
 - 3.0.0 - 2016-08-31 - Supports Platform v5.0
 - 1.2.0 - 2016-08-06 - Added relation, url, phone, email, supports grouping
 - 0.1.8 - 2016-05-16 - Basic readme file
