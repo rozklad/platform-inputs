@@ -215,6 +215,25 @@ if (! function_exists('transattr')) {
     }
 }
 
+if (! function_exists('transvalue')) {
+    /**
+     * Temporary function
+     * @todo replace with some conceptual translation
+     * @param $slug
+     * @return mixed
+     */
+    function transvalue($slug, $fallback = null)
+    {
+        $lang_slug = 'values.'.$slug;
+        $value = trans($lang_slug);
+
+        if ( $value == $lang_slug && $fallback != null )
+            return $fallback;
+
+        return $value;
+    }
+}
+
 /*
 |--------------------------------------------------------------------------
 | Theme related
