@@ -1,0 +1,2 @@
+{{-- WYSIWYG --}}
+{!! $entity->{$attribute->slug} !!}

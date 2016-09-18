@@ -1,0 +1,2 @@
+{{-- Phone --}}
+{!! $entity->{$attribute->slug} !!}

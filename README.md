@@ -155,8 +155,51 @@ Widget to show media input types
     {{-- Show gallery images --}}
     @display($product, 'gallery', 'multiple')
 
+#### @displaygroup
+
+Widget to show values of input group
+
+    {{-- Show input group table --}}
+  
+    @displaygroup($product, 'Technical information')
+
+### Functions
+
+All functions below are not namespaced and you can find their code in [src/helpers.php](src/helpers.php)
+
+#### Media related
+
+    storage_url($media);        // Link to media on any storage
+    
+    thumbnail_url($media, $width = 300, $height = 300)  // Link to thumbnail
+    
+    mime2Extension($mime, $extension = '')  // Returns most common extension to mime type
+
+#### Display values related
+
+    str_scheme($url, $scheme = 'http://'); // Add protocol if missing
+
+    str_links($text);      // Turn URLs in content to <a href>
+
+#### Localization related
+
+    transattr($slug, $fallback = null)  // @deprecated
+
+#### Theme related
+
+    theme_set($theme);          // Set active theme
+    
+    theme_set_fallback($theme); // Set fallback theme
+    
+    theme_set_area($area);      // Set area of theme (admin|frontend)
+    
+    theme_frontend();           // Shorthand for theme_set_area('frontend');
+    
+    theme_admin();              // Shorthand for theme_set_area('admin');
+
 ## Changelog
 
+- 4.1.0 - 2016-09-18 - Theme related functions, added @display theme partials
 - 4.0.0 - 2016-09-15 - Tags field
 - 3.0.0 - 2016-08-31 - Supports Platform v5.0
 - 1.2.0 - 2016-08-06 - Added relation, url, phone, email, supports grouping

@@ -26,7 +26,7 @@ class InputServiceProvider extends ServiceProvider {
         // Register default relations
         $this->registerRelations();
 
-        // Register @live widget
+        // Register the Blade @live widget
         $this->registerBladeLiveWidget();
 
         // Config and other resources

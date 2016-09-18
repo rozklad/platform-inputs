@@ -19,7 +19,7 @@
     </label>
 
     <div id="preview-container-{{ $attribute->slug }}">
-        @display($entity, $attribute->slug, $mode)
+        @display($entity, $attribute->slug, $mode, 'edit')
     </div>
 
     @if ( $mode == 'multiple' )
