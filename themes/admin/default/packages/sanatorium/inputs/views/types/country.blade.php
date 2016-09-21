@@ -4,7 +4,8 @@
         {{{ transattr($attribute->slug, $attribute->name) }}}
     </label>
 
-    <select class="form-control" name="{{ $attribute->slug }}" id="{{ $attribute->slug }}">
+    <select class="form-control" name="{{ $attribute->slug }}" id="{{ $attribute->slug }}" placeholder="{{ trans('sanatorium/inputs::types.country.placeholder') }}" data-placeholder="{{ trans('sanatorium/inputs::types.country.placeholder') }}">
+        <option></option>
         @foreach( $countries as $country )
             <option value="{{ $country['code'] }}" {{ $country['code'] == $entity->{$attribute->slug} ? 'selected' : '' }}>{{ $country['name'] }}</option>
         @endforeach

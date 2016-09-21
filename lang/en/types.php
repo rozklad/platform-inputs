@@ -95,6 +95,12 @@ return [
 
     ],
 
+    'country' => [
+
+        'placeholder' => 'Select country',
+
+    ],
+
     // Legacy values, delete when getting rid of dropzone
     'file' => [
         'select' => 'Select files',
