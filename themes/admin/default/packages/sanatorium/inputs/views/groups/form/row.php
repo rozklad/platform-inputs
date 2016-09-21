@@ -15,7 +15,7 @@
 
 <script type="text/html" id="formRow">
 
-    <div class="row" data-row>
+    <div class="row form-row" data-row>
     <% _.each(fields, function(item, index) { %>
 
         <div class="col col-sm-<%= 12/cols %>" data-col>
@@ -51,8 +51,18 @@
 <script type="text/html" id="formField">
 
     <% if ( typeof item.name != 'undefined' && item.attribute != 'undefined' ) { %>
-    <div class="panel panel-default">
+    <div class="panel panel-default" data-name="<%= item.name %>" data-attribute="<%= item.attribute %>">
         <div class="panel-heading">
+            <input type="checkbox" data-toggle="tooltip" title="required" class="pull-right"
+            <%
+            if ( typeof item.required != 'undefined' ) {
+                if ( item.required == 1 ) {
+                    %>
+                    checked="checked"
+                    <%
+                }
+            }
+            %> data-required>
             <%= item.name %> <small class="text-muted"><%= item.attribute %></small>
         </div>
     </div>

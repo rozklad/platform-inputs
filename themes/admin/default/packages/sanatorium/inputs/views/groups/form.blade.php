@@ -47,6 +47,25 @@
 				buildFormGlobal();
 
 			});
+
+			$builder.find('[data-required]').change(function(event){
+
+				var $attribute = $(this).parents('[data-name]:first');
+
+				var attribute = $attribute.data('attribute'),
+					name = $attribute.data('name');
+
+				var rowindex = $attribute.parents('[data-row]:first').index(),
+					colindex = $attribute.parents('[data-col]:first').index();
+
+				window.settings[rowindex].fields[colindex] = {
+					attribute: attribute,
+					name: name,
+					required: $(this).is(':checked') ? '1' : '0'
+				};
+				buildFormGlobal();
+
+			});
 		}
 
 		function activateDropzone() {
@@ -163,12 +182,12 @@
 			padding: 20px;
 			position: relative;
 		}
-		.form-builder .canvas .row {
+		.form-builder .canvas .form-row {
 			position: relative;
 			padding-top: 10px;
 			padding-bottom: 10px;
 		}
-		.form-builder .canvas .row .panel {
+		.form-builder .canvas .form-row .panel {
 			margin-bottom: 0;
 		}
 		.form-builder .canvas-wrapper {
