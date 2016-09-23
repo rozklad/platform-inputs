@@ -102,6 +102,9 @@ class GroupEventHandler extends BaseEventHandler implements GroupEventHandlerInt
         // Assign attribute settings
         if ( isset($data['settings']) )
             $this->assignSettings($attribute, $data['settings']);
+
+        if ( isset($data['translations']) )
+            $this->assignTranslations($attribute, $data['translations']);
     }
 
     /**
@@ -152,6 +155,8 @@ class GroupEventHandler extends BaseEventHandler implements GroupEventHandlerInt
         $this->removeFromGroups($attribute);
 
         $this->removeRelations($attribute);
+
+        $this->removeTranslations($attribute);
     }
 
     protected function getTmpFilePath($slug = null)
@@ -213,6 +218,20 @@ class GroupEventHandler extends BaseEventHandler implements GroupEventHandlerInt
         ]);
     }
 
+    protected function assignTranslations(Attribute $attribute, $translations)
+    {
+        if ( empty($translations) )
+            return false;
+
+        foreach( $translations as $key => $translation )
+        {
+            foreach ( $translation as $locale => $value )
+            {
+                \Sanatorium\Localization\Widgets\Language::set($attribute, $key, $locale, $value);
+            }
+        }
+    }
+
     protected function removeFromGroups(Attribute $attribute)
     {
         foreach( Group::whereHas('attributes', function($query) use ($attribute) {
@@ -226,6 +245,11 @@ class GroupEventHandler extends BaseEventHandler implements GroupEventHandlerInt
     protected function removeRelations(Attribute $attribute)
     {
         Relation::where('attribute_id', $attribute->id)->delete();
+    }
+
+    protected function removeTranslations(Attribute $attribute)
+    {
+        // @todo: remove translations here
     }
 
 }

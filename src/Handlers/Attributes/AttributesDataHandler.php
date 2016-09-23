@@ -12,7 +12,6 @@ class AttributesDataHandler extends DataHandler implements DataHandlerInterface
      */
     public function prepare(array $data)
     {
-        dd($data);
         $options = [];
 
         foreach (array_get($data, 'options', []) as $option) {

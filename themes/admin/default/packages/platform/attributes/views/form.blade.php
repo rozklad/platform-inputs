@@ -550,7 +550,7 @@
                                                         <td>
                                                             <input type="text"
                                                                    class="form-control"
-                                                                   name="translations[options][{{ $slug }}][{{ $language->locale }}]"
+                                                                   name="translations[options][{{ $language->locale }}][{{ $slug }}]"
                                                                    id="description"
                                                                    placeholder="{{{ $slug }}} ({{ $language->locale }})"
                                                                    value="{{{ transattr($attribute->slug, $slug, $language->locale, 'options', $slug) }}}"
