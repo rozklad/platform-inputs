@@ -458,6 +458,117 @@
 
             </div>
 
+            <div class="panel-footer" style="background-color:#f2f2f2;padding:0;">
+
+                {{-- Translations --}}
+                {{-- @todo: put this to localization package --}}
+                @if ( function_exists('transattr') )
+
+                    <fieldset class="tab-content">
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <legend>{{ trans('sanatorium/localization::translations/common.title') }}</legend>
+                            </div>
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-md-5">
+
+                                @if ( App::bound('sanatorium.localization.language') )
+
+                                    @foreach( app('sanatorium.localization.language')->findAll() as $language )
+
+                                        <div class="form-group{{ Alert::onForm('name', ' has-error') }}">
+
+                                            <label for="name" class="control-label">
+                                                {{{ trans('platform/attributes::model.general.name') }}} <small>({{ $language->locale }})</small>
+                                            </label>
+
+                                            <input type="text"
+                                                   class="form-control"
+                                                   name="translations[name][{{ $language->locale }}]"
+                                                   id="name"
+                                                   placeholder="{{{ trans('platform/attributes::model.general.name') }}} ({{ $language->locale }})"
+                                                   value="{{{ transattr($attribute->slug, $attribute->name, $language->locale) }}}"
+                                                   data-parsley-trigger="change">
+
+                                            <span class="help-block">{{{ Alert::onForm('name') }}}</span>
+
+                                        </div>
+
+                                    @endforeach
+
+                                    @foreach( app('sanatorium.localization.language')->findAll() as $language )
+
+                                        <div class="form-group{{ Alert::onForm('description', ' has-error') }}">
+
+                                            <label for="description" class="control-label">
+                                                {{{ trans('platform/attributes::model.general.description') }}} <small>({{ $language->locale }})</small>
+                                            </label>
+
+                                            <input type="text"
+                                                   class="form-control"
+                                                   name="translations[description][{{ $language->locale }}]"
+                                                   id="description"
+                                                   placeholder="{{{ trans('platform/attributes::model.general.description') }}} ({{ $language->locale }})"
+                                                   value="{{{ transattr($attribute->slug, $attribute->description, $language->locale) }}}"
+                                                   data-parsley-trigger="change">
+
+                                            <span class="help-block">{{{ Alert::onForm('description') }}}</span>
+
+                                        </div>
+
+                                    @endforeach
+
+                                @endif
+
+                            </div>
+
+                            <div class="col-md-7">
+
+                                @if ( $attribute->options )
+
+                                    @foreach( app('sanatorium.localization.language')->findAll() as $language )
+
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th colspan="3">{{ $language->name }}</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach( $attribute->options as $slug => $value )
+                                                    <tr>
+                                                        <td>
+                                                            {{ $language->locale }}
+                                                        </td>
+                                                        <td>
+                                                            {{ $slug }}
+                                                        </td>
+                                                        <td>
+                                                            {{ $value }}
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+
+                                    @endforeach
+
+                                @endif
+
+                            </div>
+
+                        </div>
+
+                    </fieldset>
+
+                @endif
+
+            </div>
+
         </form>
 
     </section>

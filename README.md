@@ -181,10 +181,6 @@ All functions below are not namespaced and you can find their code in [src/helpe
 
     str_links($text);      // Turn URLs in content to <a href>
 
-#### Localization related
-
-    transattr($slug, $fallback = null)  // @deprecated
-
 #### Theme related
 
     theme_set($theme);          // Set active theme
