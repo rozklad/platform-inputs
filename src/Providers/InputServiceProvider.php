@@ -41,6 +41,9 @@ class InputServiceProvider extends ServiceProvider {
 	{
         // Override the original attributes the data handler
         $this->app->bind('platform.attributes.handler.data', 'Sanatorium\Inputs\Handlers\Attributes\AttributesDataHandler');
+
+        // Override the original attributes validator
+        $this->bindIf('platform.attributes.validator', 'Sanatorium\Inputs\Validator\Attributes\AttributeValidator');
 	}
 
 	public function registerTypes()
