@@ -464,7 +464,7 @@
                 {{-- @todo: put this to localization package --}}
                 @if ( function_exists('transattr') )
 
-                    <fieldset class="tab-content">
+                    <fieldset class="tab-content" style="margin-bottom:0;">
 
                         <div class="row">
                             <div class="col-md-12">
@@ -513,7 +513,7 @@
                                                    name="translations[description][{{ $language->locale }}]"
                                                    id="description"
                                                    placeholder="{{{ trans('platform/attributes::model.general.description') }}} ({{ $language->locale }})"
-                                                   value="{{{ transattr($attribute->slug, $attribute->description, $language->locale) }}}"
+                                                   value="{{{ transattr($attribute->slug, $attribute->description, $language->locale, 'description') }}}"
                                                    data-parsley-trigger="change">
 
                                             <span class="help-block">{{{ Alert::onForm('description') }}}</span>
@@ -548,7 +548,13 @@
                                                             {{ $slug }}
                                                         </td>
                                                         <td>
-                                                            {{ $value }}
+                                                            <input type="text"
+                                                                   class="form-control"
+                                                                   name="translations[options][{{ $slug }}][{{ $language->locale }}]"
+                                                                   id="description"
+                                                                   placeholder="{{{ $slug }}} ({{ $language->locale }})"
+                                                                   value="{{{ transattr($attribute->slug, $slug, $language->locale, 'options', $slug) }}}"
+                                                                   data-parsley-trigger="change">
                                                         </td>
                                                     </tr>
                                                 @endforeach
