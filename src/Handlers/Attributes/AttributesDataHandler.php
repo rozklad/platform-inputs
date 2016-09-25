@@ -14,8 +14,18 @@ class AttributesDataHandler extends DataHandler implements DataHandlerInterface
     {
         $options = [];
 
-        foreach (array_get($data, 'options', []) as $option) {
-            if (!  $option['value'] && ! $option['label']) {
+        $input = array_get($data, 'options', []);
+
+        if ( !empty($input) && is_string( $input ) ) {
+            $options = json_decode($input);
+        }
+
+        foreach ($options as $option) {
+            if ( !isset($option['value']) || !isset($option['label']) ) {
+                continue;
+            }
+
+            if (! $option['value'] && ! $option['label']) {
                 continue;
             }
 

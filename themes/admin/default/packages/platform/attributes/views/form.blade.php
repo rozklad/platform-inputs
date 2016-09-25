@@ -17,16 +17,70 @@
 {{ Asset::queue('sortable', 'platform/attributes::js/jquery.sortable.js', 'jquery') }}
 {{ Asset::queue('form', 'platform/attributes::js/form.js', [ 'platform', 'sortable', 'selectize', 'underscore', ]) }}
 {{ Asset::queue('parsley-comparison', 'sanatorium/inputs::parsley/comparison.js', ['jquery', 'validate']) }}
+{{ Asset::queue('vue', 'sanatorium/inputs::vue/vue.min.js') }}
 
 {{-- Inline styles --}}
 @section('styles')
     @parent
+    <style type="text/css">
+        .table.table-repeater > tbody > tr > td:first-child,
+        .table.table-repeater > thead > tr > th:first-child {
+            padding-left: 0;
+        }
+        .table.table-repeater > tbody > tr > td:last-child,
+        .table.table-repeater > thead > tr > th:last-child {
+            padding-right: 0;
+        }
+    </style>
 @stop
 
 {{-- Inline scripts --}}
 @section('scripts')
     @parent
     <script type="text/javascript">
+
+        // Repeater field
+        var Repeater = new Vue({
+            el: '#repeater',
+            data: {
+                debug: false,
+                @if ( !empty($options) )
+                options: {!! json_encode($options) !!}
+                @else
+                options: {
+                    fields: [
+                        {
+                            label: '',
+                            type: 'input'
+                        }
+                    ]
+                }
+                @endif
+            },
+            methods: {
+                add: function(index, field) {
+                    this.options.fields.splice(index + 1, 0, {
+                        label: '',
+                        type: 'input'
+                    });
+                },
+                remove: function(field) {
+                    this.options.fields.$remove(field);
+                },
+                storeSettings: function() {
+                    var settings = JSON.stringify(this.options),
+                        $field = $('#options');
+
+                    if ( $field.length == 0 ) {
+                        $('#repeater').after('<input type="hidden" name="options" id="options">');
+                        $field = $('#options');
+                    }
+
+                    $field.val(settings);
+                }
+            }
+        });
+
         Extension.Form.setOptions({!! json_encode($options) !!});
 
         function showHideByType() {
@@ -44,6 +98,7 @@
 
         function showHideByTypeSet(value) {
             $('[data-type-visible]').addClass('hidden').filter('.visible-' + value).removeClass('hidden');
+            $('[data-type-hidden]').removeClass('hidden').filter('.hidden-' + value).addClass('hidden');
         }
 
         function showTypeSettings() {
@@ -60,7 +115,7 @@
         }
 
         function showTypeSettingsSet(value) {
-            console.log(value);
+
             $.ajax({
                 type: 'GET',
                 url: '{!! route('sanatorium.inputs.attributes.settings') !!}/' + value,
@@ -426,13 +481,13 @@
 
                                         <div class="hide" data-no-options>
 
-                                            <div class="jumbotron">
+                                            <div class="jumbotron hidden-repeater" data-options data-type-hidden>
                                                 <h4 class="text-center">{{{ trans('platform/attributes::message.options_not_allowed') }}}</h4>
                                             </div>
 
                                         </div>
 
-                                        <div class="hide" data-options>
+                                        <div class="hide hidden-repeater" data-options data-type-hidden>
 
                                             <div class="form-group{{ Alert::onForm('options', ' has-error') }}">
 
@@ -442,6 +497,52 @@
 
                                             </div>
 
+                                        </div>
+
+                                        <div id="repeater" class="visible-repeater" data-type-visible>
+                                            <table class="table table-repeater">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Label</th>
+                                                        <th>Type</th>
+                                                        <th class="text-right">
+                                                            <button type="button" class="btn btn-link btn-sm" @click="debug = !debug">
+                                                                Debug
+                                                            </button>
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr v-for="field in options.fields">
+                                                        <td>
+                                                            <input v-model="field.label" class="form-control" @change="storeSettings()" data-parsley-ui-enabled="false">
+                                                        </td>
+                                                        <td>
+                                                            <select v-model="field.type" class="form-control" @change="storeSettings()" data-selectize-disabled data-parsley-ui-enabled="false">
+                                                                @foreach ($types as $type)
+                                                                    @if ( in_array($type->getIdentifier(), ['input', 'country']) )
+                                                                    <option value="{{{ $type->getIdentifier() }}}">{{{ $type->getName() }}}</option>
+                                                                    @endif
+                                                                @endforeach
+                                                            </select>
+                                                        </td>
+                                                        <td class="text-right">
+                                                            <button type="button" @click="add($index, field)" class="btn btn-default">
+                                                                <span class="sr-only">{{ trans('action.add') }}</span>
+                                                                <i class="fa fa-plus"></i>
+                                                            </button>
+                                                            <button type="button" @click="remove(field)" class="btn btn-default">
+                                                                <span class="sr-only">{{ trans('action.delete') }}</span>
+                                                                <i class="fa fa-trash-o"></i>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+                                            <div v-show="debug">
+                                                <pre style="font-size:9px;">@{{ $data | json }}</pre>
+                                            </div>
                                         </div>
 
                                     </fieldset>
@@ -540,6 +641,7 @@
                                             </thead>
                                             <tbody>
                                                 @foreach( $attribute->options as $slug => $value )
+                                                    @if ( is_string($slug) )
                                                     <tr>
                                                         <td>
                                                             {{ $language->locale }}
@@ -557,6 +659,7 @@
                                                                    data-parsley-trigger="change">
                                                         </td>
                                                     </tr>
+                                                    @endif
                                                 @endforeach
                                             </tbody>
                                         </table>
@@ -591,18 +694,18 @@
                         <div class="input-group-addon" data-option-move><i class="fa fa-arrows"></i></div>
 
                         <input class="form-control" id="label" name="options[<%= id %>][label]" type="text" value="<%= label %>" data-slugify="#option-<%= id %>" placeholder="{{{ trans('platform/attributes::model.types.option_label') }}}" data-parsley-ui-enabled="false">
-			</div>
+                    </div>
 
-			<input class="form-control" id="option-<%= id %>" name="options[<%= id %>][value]" type="text" value="<%= value %>" placeholder="{{{ trans('platform/attributes::model.types.option_value') }}}" data-parsley-ui-enabled="false">
+                    <input class="form-control" id="option-<%= id %>" name="options[<%= id %>][value]" type="text" value="<%= value %>" placeholder="{{{ trans('platform/attributes::model.types.option_value') }}}" data-parsley-ui-enabled="false">
 
-			<button class="btn btn-md btn-default" data-option-add><i class="fa fa-plus"></i></button>
-			<button class="btn btn-md btn-default" data-option-remove><i class="fa fa-trash-o"></i></button>
+                    <button class="btn btn-md btn-default" data-option-add><i class="fa fa-plus"></i></button>
+                    <button class="btn btn-md btn-default" data-option-remove><i class="fa fa-trash-o"></i></button>
 
-		</div>
+                </div>
 
-	</div>
+            </div>
 
-</li>
+        </li>
 
 </script>
 @stop

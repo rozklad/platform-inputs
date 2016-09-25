@@ -67,7 +67,7 @@ To register new extension, use:
 
 #### Repeater
 
-Multiple input values (to be extended).
+Multiple input values
 
 #### Scale
 
@@ -195,6 +195,7 @@ All functions below are not namespaced and you can find their code in [src/helpe
 
 ## Changelog
 
+- 4.3.0 - 2016-09-25 - Repeater now allows sub field definition
 - 4.1.6 - 2016-09-21 - "required" settings on input groups
 - 4.1.0 - 2016-09-18 - Theme related functions, added @display theme partials
 - 4.0.0 - 2016-09-15 - Tags field
