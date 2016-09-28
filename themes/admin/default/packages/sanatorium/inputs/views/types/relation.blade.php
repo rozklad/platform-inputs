@@ -25,6 +25,7 @@
 
     <select class="form-control" name="{{ $attribute->slug }}{{ $relation->multiple ? '[]' : '' }}" id="{{ $attribute->slug }}" {{ $relation->multiple ? 'multiple' : '' }}>
         @foreach ( $relatable_objects as $relatable_object )
+            @if ( (isset($relatable_object['enabled']) && $relatable_object['enabled'] == 1 ) || !isset($relatable_object['enabled']) )
             <option value="{{ $relatable_object['id'] }}"
                 <?php
                         if ( is_array($entity->{$attribute->slug}) ) {
@@ -42,6 +43,7 @@
             >
                 {{ $relatable_object['name'] }}
             </option>
+            @endif
         @endforeach
     </select>
 
