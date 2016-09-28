@@ -10,13 +10,15 @@
 
     $relatable_objects = [];
 
-    if ($relation) {
-
-        $relatable_class = app('sanatorium.inputs.relations')->getRelation($relation->relation);
-
-        $relatable_objects = $relatable_class::all()->toArray();
-
+    // If no relation found, do not return anything
+    // @todo: solve more elegant
+    if ( !$relation ) {
+        return null;
     }
+
+    $relatable_class = app('sanatorium.inputs.relations')->getRelation($relation->relation);
+
+    $relatable_objects = $relatable_class::all()->toArray();
 
 
     ?>
