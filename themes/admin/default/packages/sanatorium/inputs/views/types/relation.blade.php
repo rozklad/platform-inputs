@@ -12,14 +12,14 @@
 
     // If no relation found, do not return anything
     // @todo: solve more elegant
-    if ( !$relation ) {
+    if ( !is_object($relation) ) {
+        echo 'Relation is not set up correctly (missing Relation object)';
         return null;
     }
 
     $relatable_class = app('sanatorium.inputs.relations')->getRelation($relation->relation);
 
     $relatable_objects = $relatable_class::all()->toArray();
-
 
     ?>
 
