@@ -21,7 +21,6 @@ class AttributeValidator extends Validator implements AttributeValidatorInterfac
      */
     public function onUpdate()
     {
-        //$this->rules['slug'] .= ',slug,{slug},slug';
-        $this->rules['slug'] = 'required|alpha_dash';
+        $this->rules['slug'] .= ',slug,{slug},slug';
     }
 }
