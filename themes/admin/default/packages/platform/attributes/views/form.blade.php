@@ -694,18 +694,18 @@
                         <div class="input-group-addon" data-option-move><i class="fa fa-arrows"></i></div>
 
                         <input class="form-control" id="label" name="options[<%= id %>][label]" type="text" value="<%= label %>" data-slugify="#option-<%= id %>" placeholder="{{{ trans('platform/attributes::model.types.option_label') }}}" data-parsley-ui-enabled="false">
-                    </div>
+			</div>
 
-                    <input class="form-control" id="option-<%= id %>" name="options[<%= id %>][value]" type="text" value="<%= value %>" placeholder="{{{ trans('platform/attributes::model.types.option_value') }}}" data-parsley-ui-enabled="false">
+			<input class="form-control" id="option-<%= id %>" name="options[<%= id %>][value]" type="text" value="<%= value %>" placeholder="{{{ trans('platform/attributes::model.types.option_value') }}}" data-parsley-ui-enabled="false">
 
-                    <button class="btn btn-md btn-default" data-option-add><i class="fa fa-plus"></i></button>
-                    <button class="btn btn-md btn-default" data-option-remove><i class="fa fa-trash-o"></i></button>
+			<button class="btn btn-md btn-default" data-option-add><i class="fa fa-plus"></i></button>
+			<button class="btn btn-md btn-default" data-option-remove><i class="fa fa-trash-o"></i></button>
 
-                </div>
+		</div>
 
-            </div>
+	</div>
 
-        </li>
+</li>
 
 </script>
 @stop

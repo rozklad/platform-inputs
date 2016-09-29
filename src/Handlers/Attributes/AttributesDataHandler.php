@@ -21,7 +21,9 @@ class AttributesDataHandler extends DataHandler implements DataHandlerInterface
         } else {
             $options = array_get($data, 'options', []);
         }
-        
+
+        $build = [];
+
         foreach ($options as $option) {
             if ( !isset($option['value']) || !isset($option['label']) ) {
                 continue;
@@ -31,12 +33,14 @@ class AttributesDataHandler extends DataHandler implements DataHandlerInterface
                 continue;
             }
 
-            if (! $option['value'] == '[object Object]' ) {
+            if ( !is_string($option['value']) || !is_string($option['label']) ) {
                 continue;
             }
 
-            $options[trim($option['value'])] = trim($option['label']);
+            $build[trim($option['value'])] = trim($option['label']);
         }
+
+        $options = $build;
 
         return array_merge(array_except($data, 'options'), compact('options'));
     }
