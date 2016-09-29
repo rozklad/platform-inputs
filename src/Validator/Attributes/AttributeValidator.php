@@ -12,7 +12,7 @@ class AttributeValidator extends Validator implements AttributeValidatorInterfac
         'name'    => 'required',
         'slug'    => 'required|alpha_dash|unique:attributes',
         'type'    => 'required',
-        'options' => 'required_if:type,checkbox,radio,select,multiselect',
+        'options' => 'required_if:type,checkbox,radio,select',
         'enabled' => 'required',
     ];
 
