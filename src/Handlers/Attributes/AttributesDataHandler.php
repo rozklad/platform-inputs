@@ -31,6 +31,10 @@ class AttributesDataHandler extends DataHandler implements DataHandlerInterface
                 continue;
             }
 
+            if (! $option['value'] == '[object Object]' ) {
+                continue;
+            }
+
             $options[trim($option['value'])] = trim($option['label']);
         }
 
