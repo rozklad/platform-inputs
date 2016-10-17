@@ -204,7 +204,20 @@ class GroupsController extends AdminController {
 	protected function processForm($mode, $id = null)
 	{
 		// Store the group
-		list($messages) = $this->groups->store($id, request()->all());
+		list($messages, $group) = $this->groups->store($id, request()->except('translations'));
+
+        if ( request()->has('translations') )
+        {
+            $translations = request()->get('translations');
+
+            foreach( $translations as $key => $translation )
+            {
+                foreach ( $translation as $locale => $value )
+                {
+                    \Sanatorium\Localization\Widgets\Language::set($group, $key, $locale, $value);
+                }
+            }
+        }
 
 		// Do we have any errors?
 		if ($messages->isEmpty())

@@ -89,6 +89,12 @@ class GroupEventHandler extends BaseEventHandler implements GroupEventHandlerInt
 		$this->app['cache']->forget('sanatorium.inputs.group.'.$group->id);
 	}
 
+    /**
+     * Move to attributes event handler
+     *
+     * @param Attribute $attribute
+     * @param array     $data
+     */
 	protected function attributeConnectedPreferences(Attribute $attribute, array $data)
     {
         // Assign attribute to group

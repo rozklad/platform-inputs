@@ -563,7 +563,7 @@
 
                 {{-- Translations --}}
                 {{-- @todo: put this to localization package --}}
-                @if ( function_exists('transattr') )
+                @if ( function_exists('transattr') && $mode == 'update' )
 
                     <fieldset class="tab-content" style="margin-bottom:0;">
 

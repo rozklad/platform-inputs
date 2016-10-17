@@ -463,6 +463,60 @@
 
 		</div>
 
+		<div class="panel-footer" style="background-color:#f2f2f2;padding:0;">
+
+			{{-- Translations --}}
+			{{-- @todo: put this to localization package --}}
+			@if ( function_exists('transattr') && $mode == 'update' )
+
+				<fieldset class="tab-content" style="margin-bottom:0;">
+
+					<div class="row">
+						<div class="col-md-12">
+							<legend>{{ trans('sanatorium/localization::translations/common.title') }}</legend>
+						</div>
+					</div>
+
+					<div class="row">
+
+						<div class="col-md-6">
+
+							@if ( App::bound('sanatorium.localization.language') )
+
+								@foreach( app('sanatorium.localization.language')->findAll() as $language )
+
+									<div class="form-group{{ Alert::onForm('name', ' has-error') }}">
+
+										<label for="name" class="control-label">
+											{{{ trans('sanatorium/inputs::groups/model.general.name') }}} <small>({{ $language->locale }})</small>
+										</label>
+
+										<input type="text"
+											   class="form-control"
+											   name="translations[name][{{ $language->locale }}]"
+											   id="name"
+											   placeholder="{{{ trans('sanatorium/inputs::groups/model.general.name') }}} ({{ $language->locale }})"
+											   value="@localize($group, 'name', $language->locale)"
+											   data-parsley-trigger="change">
+
+										<span class="help-block">{{{ Alert::onForm('name') }}}</span>
+
+									</div>
+
+								@endforeach
+
+							@endif
+
+						</div>
+
+					</div>
+
+				</fieldset>
+
+			@endif
+
+		</div>
+
 	</form>
 
 </section>
