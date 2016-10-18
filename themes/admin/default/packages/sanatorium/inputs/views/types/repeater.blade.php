@@ -24,7 +24,7 @@
             el: '#repeater-{{ str_replace('-', '_', str_slug($attribute->slug)) }}',
             data: {
                 {{-- Values --}}
-                @if ( is_array( $entity->{$attribute->slug} ) )
+                @if ( is_array( $entity->{$attribute->slug} ) && !empty($entity->{$attribute->slug}) )
                 values   : {!! json_encode($entity->{$attribute->slug}) !!},
                 @else
                 values   : [],
