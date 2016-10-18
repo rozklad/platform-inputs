@@ -22,6 +22,7 @@
                     @endif
                 @endif
 
+                <!--
                 <a href="#" class="sanatorium-inputs-widget-display-btn edit" data-toggle="modal" data-target="#media-manager-{{ $slug }}">
                     <i class="fa fa-pencil"></i>
                 </a>
@@ -29,6 +30,7 @@
                 <a href="#" class="sanatorium-inputs-widget-display-btn delete"  data-external-control="{{ $slug }}" data-external-type="delete">
                     <i class="fa fa-trash"></i>
                 </a>
+                -->
 
             </div>
         @endforeach
