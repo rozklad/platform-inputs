@@ -170,12 +170,8 @@ if ( !function_exists('str_country') )
         if ( strlen($country) > 2 )
             return $country;
 
-        $countries_file_path = __DIR__ . '/../storage/countries.json';
-
-        if ( !file_exists($countries_file_path) )
+        if ( empty( $countries = get_all_countries() ) )
             return $country;
-
-        $countries = json_decode( file_get_contents($countries_file_path), true);
 
         $key = array_search($country, array_column($countries, 'code'));
 
@@ -184,6 +180,19 @@ if ( !function_exists('str_country') )
 
         return $countries[$key]['name'];
 
+    }
+}
+
+if ( !function_exists('get_all_countries') )
+{
+    function get_all_countries()
+    {
+        $countries_file_path = __DIR__ . '/../storage/countries.json';
+
+        if ( !file_exists($countries_file_path) )
+            return [];
+
+        return json_decode( file_get_contents($countries_file_path), true);
     }
 }
 
