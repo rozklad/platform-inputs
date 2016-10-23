@@ -233,7 +233,7 @@ class GroupEventHandler extends BaseEventHandler implements GroupEventHandlerInt
         {
             foreach ( $translation as $locale => $value )
             {
-                \Sanatorium\Localization\Widgets\Language::set($attribute, $key, $locale, $value);
+                app('sanatorium.localization.localization')->set($attribute, $key, $locale, $value);
             }
         }
     }

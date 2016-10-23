@@ -214,7 +214,7 @@ class GroupsController extends AdminController {
             {
                 foreach ( $translation as $locale => $value )
                 {
-                    \Sanatorium\Localization\Widgets\Language::set($group, $key, $locale, $value);
+                    app('sanatorium.localization.localization')->set($group, $key, $locale, $value);
                 }
             }
         }
