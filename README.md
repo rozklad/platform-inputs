@@ -175,6 +175,20 @@ All functions below are not namespaced and you can find their code in [src/helpe
     
     mime2Extension($mime, $extension = '')  // Returns most common extension to mime type
 
+#### Select, checkbox, multiselect functions
+
+#### get_attribute_label
+
+    get_attribute_label($key, $slug)  // Return label of single selected value
+    
+#### get_attribute_labels
+    
+    get_attribute_labels($keys = [], $slug, $return = 'string', $implode = ', ') // Return labels of selected values
+
+Returns for example
+
+    get_attribute_labels($product->animal, 'animal', 'array')  // => array ('cow' => 'Cow')
+
 #### Display values related
 
     str_scheme($url, $scheme = 'http://'); // Add protocol if missing

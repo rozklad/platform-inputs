@@ -291,3 +291,54 @@ if (! function_exists('theme_frontend')) {
         theme_set_area('frontend');
     }
 }
+
+
+if (! function_exists('get_attribute_label')) {
+
+    function get_attribute_label($key, $slug)
+    {
+        $options = app('platform.attributes')->whereSlug($slug)->lists('options')->first();
+
+        if ( !is_array($options) )
+            return $key;
+
+        if ( !isset($options[$key]) )
+            return $key;
+
+        return $options[$key];
+    }
+
+}
+
+if (! function_exists('get_attribute_labels')) {
+
+    function get_attribute_labels($keys = [], $slug, $return = 'string', $implode = ', ')
+    {
+        if ( !is_array($keys) )
+            return null;
+
+        $options = app('platform.attributes')->whereSlug($slug)->lists('options')->first();
+
+        if ( is_array($options) )
+        {
+            $keys = array_flip( $keys );
+            array_walk($keys, function (&$value, $key) use ($options)
+            {
+                if ( isset($options[ $key ]) )
+                    $value = $options[ $key ];
+            });
+        }
+
+        switch ( $return ) {
+            case 'string':
+                return implode($implode, $keys);
+                break;
+
+            case 'array':
+                return $keys;
+                break;
+        }
+
+    }
+
+}
