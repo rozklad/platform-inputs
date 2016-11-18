@@ -8,7 +8,7 @@
     <script type="text/javascript">
         $(function(){
             $('#{{ $attribute->slug }}').datepicker({
-                format: 'yyyy-mm-dd',
+                format: 'dd.mm.yyyy',
                 weekStart: {{ (int)config('date.week.dow') }}
             });
         });
