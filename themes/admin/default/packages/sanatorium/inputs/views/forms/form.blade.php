@@ -7,6 +7,7 @@
 @stop
 
 {{-- Queue assets --}}
+{{ Asset::queue('underscore', 'underscore/js/underscore.js', 'jquery') }}
 {{ Asset::queue('validate', 'platform/js/validate.js', 'jquery') }}
 
 {{-- Inline scripts --}}
