@@ -423,7 +423,7 @@
                                                           $selected_group_ids[] = $group->id;
                                                     }
                                                     ?>
-                                                    <select name="group" class="form-control" multiple>
+                                                    <select name="group[]" class="form-control" multiple>
                                                         <option>{{ trans('sanatorium/inputs::model.general.group_placeholder') }}</option>
                                                         @foreach( \Sanatorium\Inputs\Models\Group::all() as $group )
                                                             <option value="{{ $group->id }}" {{ in_array($group->id, $selected_group_ids) ? 'selected' : '' }}>{{ $group->name }}</option>
