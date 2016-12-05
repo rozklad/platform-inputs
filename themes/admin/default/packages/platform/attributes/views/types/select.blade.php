@@ -12,7 +12,7 @@
 
 	<select name="{{ $attribute->slug }}" id="{{ $attribute->slug }}" class="form-control">
 		@foreach ($attribute->options as $key => $value)
-		<option value="{{ $key }}" {{ request()->old($attribute->slug, $entity->exists ? $entity->{$attribute->slug} : null) == $key ? ' selected="selected"' : null }}>{{ $value }}</option>
+		<option value="{{ $key }}" {{ request()->old($attribute->slug, $entity->exists ? $entity->{$attribute->slug} : null) == $key ? ' selected="selected"' : null }}>{{{ transattr($attribute->slug, $value, null, 'options', $key) }}}</option>
 		@endforeach
 	</select>
 

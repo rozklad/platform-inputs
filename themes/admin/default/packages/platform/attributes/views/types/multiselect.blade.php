@@ -14,7 +14,7 @@
 
 	<select multiple="multiple" name="{{ $attribute->slug }}[]" id="{{ $attribute->slug }}" class="form-control">
 		@foreach ($attribute->options as $key => $value)
-		<option value="{{ $key }}"{{ in_array($key, $entity->exists ? (is_array($entity->{$attribute->slug}) ? $entity->{$attribute->slug} : array()) : array()) ? ' selected="selected"' : null }}>{{ $value }}</option>
+		<option value="{{ $key }}"{{ in_array($key, $entity->exists ? (is_array($entity->{$attribute->slug}) ? $entity->{$attribute->slug} : array()) : array()) ? ' selected="selected"' : null }}>{{{ transattr($attribute->slug, $value, null, 'options', $key) }}}</option>
 		@endforeach
 	</select>
 
