@@ -45,6 +45,11 @@
 
             $('#' + target).trigger('click');
         });
+
+        $('#input-{{ $attribute->slug }}').change(function(){
+
+            $(this).parents('form:first').trigger('submit');
+        });
     });
 </script>
 @stop
