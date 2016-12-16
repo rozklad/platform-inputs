@@ -23,11 +23,7 @@
         </div>
         <div class="col-sm-6">
             <button type="button" class="btn btn-default" for="input-{{ $attribute->slug }}">
-                @if ( $entity->{$attribute->slug} )
-                    {{ 'Update picture' }}
-                @else
-                    {{ 'Add picture' }}
-                @endif
+                {{ transattr($attribute->slug, $attribute->description, null, 'description') }}
             </button>
         </div>
     </div>
