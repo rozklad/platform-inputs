@@ -115,6 +115,8 @@
       this.$previewContainer = $(this.$manager.data('preview-container'));
       this.$previewTemplate  = $('#preview-template-' + this.input_name.replace('[]', ''));
       this.$btnTrigger       = $('.btn-trigger-' + this.input_name.replace('[]', ''));
+      this.$btnSelect        = this.$manager.find('[data-select-files]');
+      this.$fakeInput        = this.$manager.find('[data-fake-input]');
 
     },
 
@@ -147,6 +149,33 @@
       this.activateExternal();
 
       this.activateScrollListener();
+
+      this.activateSelectFiles();
+
+    },
+
+    activateSelectFiles: function() {
+
+      var self = this;
+
+      var choose = this.$fakeInput.get(0);
+      FileAPI.event.on(choose, 'change', function (event) {
+        var files = FileAPI.getFiles(event)
+
+        $('a[href="' + self.controls.$library.attr('href') + '"]').tab('show');
+
+        if (files.length) {
+
+          self.uploadFiles(files);
+
+        }
+      });
+
+      this.$btnSelect.unbind('click').click(function(event){
+        event.preventDefault();
+
+        self.$fakeInput.trigger('click');
+      })
 
     },
 
