@@ -65,6 +65,9 @@ if ( !function_exists('thumbnail_url') )
 
         $extension = mime2Extension($media->mime);
 
+        if ( $width == 'full' || $height == 'full' )
+            return storage_url( $media->path );
+
         return storage_url( "cache/thumbs/{$media->id}_{$name}.{$extension}" );
     }
 }
